@@ -1,1 +1,5 @@
-[![Work in Repl.it](https://classroom.github.com/assets/work-in-replit-14baed9a392b3a25080506f3b7b6d57f295ec2978f6f33ec97e36a161684cbe9.svg)](https://classroom.github.com/online_ide?assignment_repo_id=4773498&assignment_repo_type=AssignmentRepo)
+# Agent Based Disease Modelling
+
+Project to build, assess and visualise agent based disease models.
+
+Will first do some light exploration of compartmental models, starting with the basic SIR model. Will then focus on agent based models, including building some animations. May compare with some disease modelling libraries.
