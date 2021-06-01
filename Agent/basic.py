@@ -4,13 +4,13 @@ import pygame
 import sys
 from pygame.locals import *
 
-width, height = 1000, 600
+width, height = 600, 600
 
 gamma = 0.0015
 beta = 0.05
-radius = 10
-init_S = 100
-init_I = 10
+radius = 20
+init_S = 10 
+init_I = 5 
 
 WHITE = (255,255,255)
 RED = (255,0,0)
@@ -70,8 +70,8 @@ for i in range(init_S):
 	x = random() * (width - radius*2) + radius
 	y = random() * (height - radius*2) + radius
 	
-	xspeed = (random() - 0.5)*2
-	yspeed = (random() - 0.5)*2
+	xspeed = (random() - 0.5)*4
+	yspeed = (random() - 0.5)*4
 	
 	population.append( Person(position=np.array([x,y]),dx=xspeed, dy=yspeed, SIR='S' ) )
 
@@ -79,8 +79,8 @@ for i in range(init_I):
 	x = random() * (width - radius*2) + radius
 	y = random() * (height - radius*2) + radius
 	
-	xspeed = (random() - 0.5)*2
-	yspeed = (random() - 0.5)*2
+	xspeed = (random() - 0.5)*4
+	yspeed = (random() - 0.5)*4
 	
 	population.append( Person(position=np.array([x, y]),dx=xspeed, dy=yspeed, SIR='I' ) )
 
@@ -88,6 +88,7 @@ screen = pygame.display.set_mode((width,height))
 screen.fill(WHITE)
 trace = screen.copy()
 pygame.display.update()	
+clock = pygame.time.Clock()
 
 while True:
 
@@ -99,3 +100,4 @@ while True:
 		person.update()
 	pygame.display.update()
 	screen.fill(WHITE)
+	clock.tick(60)
