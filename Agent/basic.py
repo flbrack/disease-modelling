@@ -3,14 +3,17 @@ import numpy as np
 import pygame
 import sys
 from pygame.locals import *
+import matplotlib.pyplot as plt
 
-width, height = 1000, 600
+width, height = 600, 600
+
+T = 500
 
 gamma = 0.0015
 beta = 0.05
-radius = 10
-init_S = 100
-init_I = 10
+radius = 30
+init_S = 15
+init_I = 2
 
 WHITE = (255,255,255)
 RED = (255,0,0)
@@ -44,7 +47,7 @@ class Person:
 		if self.position[1] + radius > height or self.position[1] - radius < 0:
 			self.dy = -self.dy
 
-		self.position += np.array([self.dx, self.dy])
+		self.position += np.array([self.dx, self.dy]) * dt * 0.15
 		
 		if self.SIR == 'S':
 			self.color = BLUE 
@@ -67,8 +70,8 @@ class Person:
 population = []
 
 for i in range(init_S):
-	x = random() * (width - radius*2) + radius
-	y = random() * (height - radius*2) + radius
+	x = random() * (width - radius*2) + 1.5*radius
+	y = random() * (height - radius*2) + 1.5*radius
 	
 	xspeed = (random() - 0.5)*2
 	yspeed = (random() - 0.5)*2
@@ -76,8 +79,8 @@ for i in range(init_S):
 	population.append( Person(position=np.array([x,y]),dx=xspeed, dy=yspeed, SIR='S' ) )
 
 for i in range(init_I):
-	x = random() * (width - radius*2) + radius
-	y = random() * (height - radius*2) + radius
+	x = random() * (width - radius*2) + 1.5*radius
+	y = random() * (height - radius*2) + 1.5*radius
 	
 	xspeed = (random() - 0.5)*2
 	yspeed = (random() - 0.5)*2
@@ -86,10 +89,16 @@ for i in range(init_I):
 
 screen = pygame.display.set_mode((width,height))
 screen.fill(WHITE)
-trace = screen.copy()
-pygame.display.update()	
+clock = pygame.time.Clock()
 
-while True:
+
+Sarray = np.zeros(T)
+Iarray = np.zeros(T)
+Rarray = np.zeros(T)
+
+for i in range(T):
+
+	dt = clock.tick(30)
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -97,5 +106,25 @@ while True:
 	
 	for person in population:
 		person.update()
+
+		if person.SIR == 'S':
+			Sarray[i] += 1
+		elif person.SIR == 'I':
+			Iarray[i] += 1
+		elif person.SIR == 'R':
+			Rarray[i] += 1
+
 	pygame.display.update()
 	screen.fill(WHITE)
+
+plt.plot(Sarray, label='Susceptible')
+plt.plot(Iarray, label='Infected')
+plt.plot(Rarray, label='Recoverd')
+
+plt.xlabel("Time")
+plt.ylabel("Number of people")
+plt.title("Agent Based SIR Model")
+plt.legend(loc=0)
+
+plt.savefig("agent.png")
+
