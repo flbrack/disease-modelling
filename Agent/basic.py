@@ -13,7 +13,7 @@ gamma = 0.0015
 beta = 0.05
 radius = 30
 init_S = 15
-init_I = 2
+init_I = 5
 
 WHITE = (255,255,255)
 RED = (255,0,0)
@@ -87,7 +87,7 @@ for i in range(init_I):
 	
 	population.append( Person(position=np.array([x, y]),dx=xspeed, dy=yspeed, SIR='I' ) )
 
-screen = pygame.display.set_mode((width,height))
+screen = pygame.display.set_mode((width+10,height+10))
 screen.fill(WHITE)
 clock = pygame.time.Clock()
 
@@ -117,9 +117,9 @@ for i in range(T):
 	pygame.display.update()
 	screen.fill(WHITE)
 
-plt.plot(Sarray, label='Susceptible')
-plt.plot(Iarray, label='Infected')
-plt.plot(Rarray, label='Recoverd')
+plt.plot(Sarray, label='Susceptible', color=(0,0,1))
+plt.plot(Iarray, label='Infected', color=(0,1,0))
+plt.plot(Rarray, label='Recoverd', color=(1,0,0))
 
 plt.xlabel("Time")
 plt.ylabel("Number of people")
