@@ -11,15 +11,21 @@ T = 500
 
 gamma = 0.0015
 beta = 0.05
-radius = 30
-init_S = 15
+radius = 30.0
+init_S = 10
 init_I = 5
 
 WHITE = (255,255,255)
-RED = (255,0,0)
-BLUE = (0,0,255)
-GREEN = (0,255,0)
+RED = pygame.Color((255,0,0,180))
+BLUE = pygame.Color((0,0,255,180))
+GREEN = pygame.Color((0,255,0,180))
 
+
+def draw_circle_alpha(surface, color, center, radius):
+    target_rect = pygame.Rect(center, (0, 0)).inflate((radius * 2, radius * 2))
+    shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
+    pygame.draw.circle(shape_surf, color, (radius, radius), radius)
+    surface.blit(shape_surf, target_rect)
 
 class Person:
 	
@@ -30,7 +36,8 @@ class Person:
 		self.dy = dy
 	
 	def draw(self):
-		pygame.draw.circle(screen, self.color, self.position, radius)
+		draw_circle_alpha(screen, self.color, self.position, radius)
+		#pygame.draw.circle(screen, self.color, self.position, radius)
 	
 		
 	def infect(self, other):
@@ -70,31 +77,33 @@ class Person:
 population = []
 
 for i in range(init_S):
-	x = random() * (width - radius*2) + 1.5*radius
-	y = random() * (height - radius*2) + 1.5*radius
-	
+	x = radius + random()*(width - 2*radius)
+	y = radius + random()*(height - 2*radius)
+
 	xspeed = (random() - 0.5)*2
 	yspeed = (random() - 0.5)*2
 	
 	population.append( Person(position=np.array([x,y]),dx=xspeed, dy=yspeed, SIR='S' ) )
 
 for i in range(init_I):
-	x = random() * (width - radius*2) + 1.5*radius
-	y = random() * (height - radius*2) + 1.5*radius
+	x = random() * (width - radius*2) + radius
+	y = random() * (height - radius*2) + radius
 	
 	xspeed = (random() - 0.5)*2
 	yspeed = (random() - 0.5)*2
 	
 	population.append( Person(position=np.array([x, y]),dx=xspeed, dy=yspeed, SIR='I' ) )
 
-screen = pygame.display.set_mode((width+10,height+10))
-screen.fill(WHITE)
-clock = pygame.time.Clock()
-
 
 Sarray = np.zeros(T)
 Iarray = np.zeros(T)
 Rarray = np.zeros(T)
+
+
+screen = pygame.display.set_mode((width,height))
+screen.fill(WHITE)
+clock = pygame.time.Clock()
+
 
 for i in range(T):
 
