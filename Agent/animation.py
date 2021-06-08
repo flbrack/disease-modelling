@@ -86,8 +86,8 @@ for i in range(init_S):
 	population.append( Person(position=np.array([x,y]),dx=xspeed, dy=yspeed, SIR='S' ) )
 
 for i in range(init_I):
-	x = random() * (width - radius*2) + radius
-	y = random() * (height - radius*2) + radius
+	x = radius + random()*(width - 2*radius)
+	y = radius + random()*(height - 2*radius)
 	
 	xspeed = (random() - 0.5)*2
 	yspeed = (random() - 0.5)*2
