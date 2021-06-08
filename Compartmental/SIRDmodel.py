@@ -5,9 +5,9 @@ from scipy.integrate import odeint
 plt.rcParams['figure.figsize'] = 10, 8
 
 N = 1000 # Population
-beta = 0.5 # Infection rate
+beta = 0.5 # Probability of infection on contact
 gamma = 0.04 # Recovery rate
-mu = 0.03
+mu = 0.03 # Death rate
 
 # solve the system dy/dt = f(y, t)
 def f(y, t):

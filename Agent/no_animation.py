@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 width, height = 600, 600
 
+
 T = 5000
 
 gamma = 0.0015
@@ -11,6 +12,7 @@ beta = 0.05
 radius = 10.0
 init_S = 198
 init_I = 2
+
 
 
 class Person:
@@ -51,12 +53,13 @@ class Person:
 
 population = []
 
-for i in range(init_S):
+for i in range(init_S):<<<<<<< HEAD:Agent/no_animation.py
 	x = radius + random()*(width - 2*radius)
 	y = radius + random()*(height - 2*radius)
 
 	xspeed = (random() - 0.5)*2
 	yspeed = (random() - 0.5)*2
+
 	
 	population.append( Person(position=np.array([x,y]),dx=xspeed, dy=yspeed, SIR='S' ) )
 
@@ -64,10 +67,11 @@ for i in range(init_I):
 	x = random() * (width - radius*2) + radius
 	y = random() * (height - radius*2) + radius
 	
-	xspeed = (random() - 0.5)*2
-	yspeed = (random() - 0.5)*2
+	xspeed = (random() - 0.5)*4
+	yspeed = (random() - 0.5)*4
 	
 	population.append( Person(position=np.array([x, y]),dx=xspeed, dy=yspeed, SIR='I' ) )
+
 
 
 Sarray = np.zeros(T)
@@ -99,4 +103,5 @@ plt.title("Agent Based SIR Model")
 plt.legend(loc=0)
 
 plt.savefig("no_animation.png")
+
 
