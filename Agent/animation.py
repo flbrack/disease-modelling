@@ -9,15 +9,14 @@ WHITE = (255,255,255)
 
 width, height = 600, 600
 
-T = 5000
+T = 50
 
 gamma = 0.0015
 beta = 0.05
 
-radius = 30.0
-init_S = 10
+radius = 10.0
+init_S = 200
 init_I = 5
-
 
 screen = pygame.display.set_mode((width,height))
 screen.fill(WHITE)
