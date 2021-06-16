@@ -99,3 +99,34 @@ def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
 		population.append( Person(position=np.array([x,y]),dx=xspeed, dy=yspeed, SIR='I', radius=radius , gamma=gamma, beta=beta) )
 	
 	return population
+
+
+class HomePerson(Person):
+
+	def __init__(self, home, home_size, position, dx, dy, radius, gamma, beta, width, height, SIR):
+		
+		self.home = home
+		self.home_size = home_size
+		Person.__init__(self, position, dx, dy, radius, gamma, beta, width, height, SIR)
+
+	def update(self):
+
+		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
+			self.dx = -self.dx	
+			
+		if self.position[1] + self.radius > self.height or self.position[1] - self.radius < 0:
+			self.dy = -self.dy
+
+
+		if np.linalg.norm(self.position - self.home) > self.home_size:
+			self.dy = -self.dy
+			self.dx = -self.dx
+
+
+		self.position += np.array([self.dx, self.dy])
+		
+
+		if self.SIR == 'I' and random() < self.gamma:
+			self.SIR = 'R'
+
+	
