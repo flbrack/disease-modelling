@@ -1,4 +1,4 @@
-from random import random
+from random import random, shuffle
 import numpy as np
 import pygame
 
@@ -129,4 +129,10 @@ class HomePerson(Person):
 		if self.SIR == 'I' and random() < self.gamma:
 			self.SIR = 'R'
 
-	
+
+def initial_infection(init_I, population):
+	shuffle(population)
+
+	for i in range(init_I):
+		person = population[int((random() * len(population)))]
+		person.SIR = "I"

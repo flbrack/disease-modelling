@@ -17,35 +17,49 @@ beta = 0.05
 
 radius = 10.0
 init_S = 20
-init_I = 0
+init_I = 5
 
-homes = [np.array([100,100]), np.array([400,100]), np.array([100,400]), np.array([400,400])]
-home_size = 50.0
+
+home_number = 12
+home_radius = 50.0
+people_per_home = 5
+
+offset = 30
+
+homes = []
+for i in range(3):
+	for j in range(home_number//3):
+		homes.append(np.array([offset + home_radius + i*width//3, offset + home_radius+j*height//(home_number//3)]))
+
 
 screen = pygame.display.set_mode((width,height))
 screen.fill(WHITE)
 clock = pygame.time.Clock()
 
 
-# population = agent_sim.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
-
-
 population = []
 
-for i in range(5):
+for i in range(people_per_home):
 
 	for home in homes:
 
-		x = home[0] + (random()-0.5)*home_size
-		y = home[1] + (random()-0.5)*home_size
+		x = home[0] + (random()-0.5)*home_radius
+		y = home[1] + (random()-0.5)*home_radius
 
 
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( agent_sim.HomePerson(position=np.array([x,y]),dx=xspeed, dy=yspeed, home=home, home_size=home_size, SIR='S', radius=radius , gamma=gamma, beta=beta, width=600, height=600) )
+		population.append( agent_sim.HomePerson(position=np.array([x,y]),dx=xspeed, dy=yspeed, home=home, home_size=home_radius, SIR='S', \
+			radius=radius , gamma=gamma, beta=beta, width=600, height=600) )
 
 
+super_spreaders = 4
+for person in agent_sim.setup_simulation(10,0, radius=radius, beta=beta,gamma=gamma,height=height,width=width):
+	population.append(person)
+
+
+agent_sim.initial_infection(init_I, population)
 
 
 for i in range(T):
