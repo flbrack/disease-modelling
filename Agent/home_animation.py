@@ -10,26 +10,30 @@ WHITE = (255,255,255)
 
 width, height = 600, 600
 
-T = 2000
+T = 5000
 
 gamma = 0.0015
 beta = 0.05
 
-radius = 10.0
-init_S = 20
-init_I = 5
+init_S = 200
+init_I = 10
 
+super_spreaders = 10
+home_people = init_S + init_I - super_spreaders
 
-home_number = 12
-home_radius = 50.0
 people_per_home = 5
+home_number = home_people // people_per_home
 
-offset = 30
+radius = 5.0
+home_radius = 20.0
+
+columns = 5
+offset = 10
 
 homes = []
-for i in range(3):
-	for j in range(home_number//3):
-		homes.append(np.array([offset + home_radius + i*width//3, offset + home_radius+j*height//(home_number//3)]))
+for i in range(columns):
+	for j in range(home_number//columns):
+		homes.append(np.array([offset + home_radius + i*width//columns, offset + home_radius+j*height//(home_number//columns)]))
 
 
 screen = pygame.display.set_mode((width,height))
@@ -54,8 +58,8 @@ for i in range(people_per_home):
 			radius=radius , gamma=gamma, beta=beta, width=600, height=600) )
 
 
-super_spreaders = 4
-for person in agents.setup_simulation(10,0, radius=radius, beta=beta,gamma=gamma,height=height,width=width):
+
+for person in agents.setup_simulation(super_spreaders,0, radius=radius, beta=beta,gamma=gamma,height=height,width=width):
 	population.append(person)
 
 
@@ -64,6 +68,8 @@ agents.initial_infection(init_I, population)
 Sarray = np.zeros(T)
 Iarray = np.zeros(T)
 Rarray = np.zeros(T)
+
+super_spreader_array = np.zeros(T)
 
 for i in range(T):
 
@@ -85,6 +91,8 @@ for i in range(T):
 			Sarray[i] += 1
 		elif person.SIR == 'I':
 			Iarray[i] += 1
+			if type(person) == agents.Person:
+				super_spreader_array[i] += 1
 		elif person.SIR == 'R':
 			Rarray[i] += 1
 
@@ -97,6 +105,7 @@ for i in range(T):
 plt.plot(Sarray, label='Susceptible', color=(0,0,1))
 plt.plot(Iarray, label='Infected', color=(0,1,0))
 plt.plot(Rarray, label='Recoverd', color=(1,0,0))
+plt.plot(super_spreader_array, label="Super Spreader", color="black")
 
 plt.xlabel("Time")
 plt.ylabel("Number of people")
