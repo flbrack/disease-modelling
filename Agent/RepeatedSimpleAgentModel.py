@@ -37,6 +37,6 @@ for k in range(repeats):
 				data[i + k*T, 2] += 1
 
 
-np.savetxt('AgentData.csv', data, fmt = '%.1f', delimiter=",", header="S,I,R")
+np.savetxt('Data/SimpleAgentData.csv', data, fmt = '%.1f', delimiter=",", header="S,I,R")
 
 

@@ -112,4 +112,4 @@ plt.ylabel("Number of people")
 plt.title("Agent Based SIR Model")
 plt.legend(loc=0)
 
-plt.savefig("./Plots/home_animation.png")
+plt.savefig("./Plots/HomeAgentAnimated.png")
