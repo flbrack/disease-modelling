@@ -3,7 +3,7 @@ import pygame
 import sys
 from pygame.locals import *
 import matplotlib.pyplot as plt
-import agent_sim
+import agents
 
 WHITE = (255,255,255)
 
@@ -22,7 +22,7 @@ screen = pygame.display.set_mode((width,height))
 screen.fill(WHITE)
 clock = pygame.time.Clock()
 
-population = agent_sim.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
+population = agents.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
 
 Sarray = np.zeros(T)
 Iarray = np.zeros(T)

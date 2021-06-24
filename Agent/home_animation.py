@@ -3,7 +3,7 @@ import pygame
 import sys
 from pygame.locals import *
 import matplotlib.pyplot as plt
-import agent_sim
+import agents
 from random import random
 
 WHITE = (255,255,255)
@@ -50,16 +50,16 @@ for i in range(people_per_home):
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( agent_sim.HomePerson(position=np.array([x,y]),dx=xspeed, dy=yspeed, home=home, home_size=home_radius, SIR='S', \
+		population.append( agents.HomePerson(position=np.array([x,y]),dx=xspeed, dy=yspeed, home=home, home_size=home_radius, SIR='S', \
 			radius=radius , gamma=gamma, beta=beta, width=600, height=600) )
 
 
 super_spreaders = 4
-for person in agent_sim.setup_simulation(10,0, radius=radius, beta=beta,gamma=gamma,height=height,width=width):
+for person in agents.setup_simulation(10,0, radius=radius, beta=beta,gamma=gamma,height=height,width=width):
 	population.append(person)
 
 
-agent_sim.initial_infection(init_I, population)
+agents.initial_infection(init_I, population)
 
 Sarray = np.zeros(T)
 Iarray = np.zeros(T)

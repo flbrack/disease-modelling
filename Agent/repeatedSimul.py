@@ -1,5 +1,5 @@
 import numpy as np
-import agent_sim
+import agents
 
 width, height = 600, 600
 
@@ -18,7 +18,7 @@ data = np.zeros([repeats*T,3])
 
 for k in range(repeats):
 
-	population = agent_sim.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
+	population = agents.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
 
 	for i in range(T):
 

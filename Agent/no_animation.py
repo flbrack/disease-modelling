@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import agent_sim
+import agents
 
 width, height = 600, 600
 
@@ -12,7 +12,7 @@ radius = 10.0
 init_S = 198
 init_I = 2
 
-population = agent_sim.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
+population = agents.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
 
 Sarray = np.zeros(T)
 Iarray = np.zeros(T)
