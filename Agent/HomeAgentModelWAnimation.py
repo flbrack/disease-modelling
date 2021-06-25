@@ -10,22 +10,22 @@ WHITE = (255,255,255)
 
 width, height = 800, 600
 
-T = 500
+T = 5000
 
 gamma = 0.0015
 beta = 0.05
 
-init_S = 20
+init_S = 21
 init_I = 0
 
-super_spreaders = 0
+super_spreaders = 1
 home_people = init_S + init_I - super_spreaders
 
 people_per_home = 5
 home_number = home_people // people_per_home
 
 radius = 20.0
-home_radius = 150.0
+home_radius = 140.0
 
 columns = 2
 
@@ -58,7 +58,7 @@ for i in range(people_per_home):
 		yspeed = (random() - 0.5)*2
 
 		population.append( agents.HomePerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), home=home, home_size=home_radius, SIR='S', \
-			radius=radius , gamma=gamma, beta=beta, width=600, height=600) )
+			radius=radius , gamma=gamma, beta=beta, width=width, height=height) )
 
 
 

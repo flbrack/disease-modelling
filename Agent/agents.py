@@ -19,7 +19,7 @@ class Person:
 
 	# Base class for agents.
 	
-	def __init__(self, position, velocity, radius, gamma, beta, width=600, height=600, SIR='S'):
+	def __init__(self, position, velocity, radius, gamma, beta, width, height, SIR='S'):
 		self.position = position
 		self.SIR = SIR
 		self.velocity = velocity
@@ -86,7 +86,7 @@ def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
 		yspeed = (random() - 0.5)*2
 
 
-		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), SIR='S', radius=radius , gamma=gamma, beta=beta) )
+		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), SIR='S', radius=radius , gamma=gamma, beta=beta, height=height, width=width) )
 
 	for i in range(init_I):
 		x = radius + random()*(width - 2*radius)
@@ -113,14 +113,17 @@ class HomePerson(Person):
 	def update(self):
 
 		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
-			self.velocity[0] = -self.velocity[0]	
+			self.velocity[0] = -self.velocity[0]
 			
 		if self.position[1] + self.radius > self.height or self.position[1] - self.radius < 0:
 			self.velocity[1] = -self.velocity[1]
 
 
 		if np.linalg.norm(self.position - self.home) > (self.home_size - self.radius):
-			self.velocity = -self.velocity
+			normal = self.position - self.home
+			u = ( np.dot(self.velocity, normal)/np.dot(normal, normal) ) * normal
+			w = self.velocity - u
+			self.velocity = w - u
 
 
 		self.position += self.velocity
