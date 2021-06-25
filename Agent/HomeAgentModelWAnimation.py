@@ -8,32 +8,35 @@ from random import random
 
 WHITE = (255,255,255)
 
-width, height = 600, 600
+width, height = 800, 600
 
-T = 5000
+T = 500
 
 gamma = 0.0015
 beta = 0.05
 
-init_S = 200
-init_I = 10
+init_S = 20
+init_I = 0
 
-super_spreaders = 10
+super_spreaders = 0
 home_people = init_S + init_I - super_spreaders
 
 people_per_home = 5
 home_number = home_people // people_per_home
 
-radius = 5.0
-home_radius = 20.0
+radius = 20.0
+home_radius = 150.0
 
-columns = 5
-offset = 10
+columns = 2
+
+overlap = 50
+w_offset = (overlap)/2
+h_offset = (overlap)/2
 
 homes = []
 for i in range(columns):
 	for j in range(home_number//columns):
-		homes.append(np.array([offset + home_radius + i*width//columns, offset + home_radius+j*height//(home_number//columns)]))
+		homes.append(np.array([w_offset + home_radius + i*(width-overlap)//columns, h_offset + home_radius+j*(height-overlap)//(home_number//columns)]))
 
 
 screen = pygame.display.set_mode((width,height))
@@ -54,7 +57,7 @@ for i in range(people_per_home):
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( agents.HomePerson(position=np.array([x,y]),dx=xspeed, dy=yspeed, home=home, home_size=home_radius, SIR='S', \
+		population.append( agents.HomePerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), home=home, home_size=home_radius, SIR='S', \
 			radius=radius , gamma=gamma, beta=beta, width=600, height=600) )
 
 
@@ -70,6 +73,7 @@ Iarray = np.zeros(T)
 Rarray = np.zeros(T)
 
 super_spreader_array = np.zeros(T)
+
 
 for i in range(T):
 
@@ -100,6 +104,7 @@ for i in range(T):
 	screen.fill(WHITE)
 	for home in homes:
 		pygame.draw.circle(screen, color=(0,0,0) ,center= home, radius = 2)
+		pygame.draw.circle(screen, color=(0,0,0) ,center= home, radius = home_radius, width=1)	
 
 
 plt.plot(Sarray, label='Susceptible', color=(0,0,1))
@@ -112,4 +117,4 @@ plt.ylabel("Number of people")
 plt.title("Agent Based SIR Model")
 plt.legend(loc=0)
 
-plt.savefig("./Plots/HomeAgentAnimated.png")
+plt.savefig("./Plots/HomeAgentWOverlapAnimated.png")

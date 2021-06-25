@@ -19,11 +19,10 @@ class Person:
 
 	# Base class for agents.
 	
-	def __init__(self, position, dx, dy, radius, gamma, beta, width=600, height=600, SIR='S'):
+	def __init__(self, position, velocity, radius, gamma, beta, width=600, height=600, SIR='S'):
 		self.position = position
 		self.SIR = SIR
-		self.dx = dx
-		self.dy = dy
+		self.velocity = velocity
 		self.radius = radius
 		self.gamma = gamma
 		self.beta = beta
@@ -60,12 +59,12 @@ class Person:
 	# Keeps agent moving and inside given area. Also controls when it recovers from disease.
 
 		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
-			self.dx = -self.dx	
+			self.velocity[0] = -self.velocity[0]	
 			
 		if self.position[1] + self.radius > self.height or self.position[1] - self.radius < 0:
-			self.dy = -self.dy
+			self.velocity[1] = -self.velocity[1]
 
-		self.position += np.array([self.dx, self.dy])
+		self.position += self.velocity
 		
 
 		if self.SIR == 'I' and random() < self.gamma:
@@ -87,7 +86,7 @@ def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
 		yspeed = (random() - 0.5)*2
 
 
-		population.append( Person(position=np.array([x,y]),dx=xspeed, dy=yspeed, SIR='S', radius=radius , gamma=gamma, beta=beta) )
+		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), SIR='S', radius=radius , gamma=gamma, beta=beta) )
 
 	for i in range(init_I):
 		x = radius + random()*(width - 2*radius)
@@ -96,34 +95,35 @@ def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( Person(position=np.array([x,y]),dx=xspeed, dy=yspeed, SIR='I', radius=radius , gamma=gamma, beta=beta) )
+		population.append( Person(position=np.array([x,y]),velocity=np.array([xspeed, yspeed]), SIR='I', radius=radius , gamma=gamma, beta=beta) )
 	
 	return population
 
 
 class HomePerson(Person):
 
-	def __init__(self, home, home_size, position, dx, dy, radius, gamma, beta, width, height, SIR):
+	# Extended agent class, will not leave a specified area, its "home"
+
+	def __init__(self, home, home_size, position, velocity, radius, gamma, beta, width, height, SIR):
 		
 		self.home = home
 		self.home_size = home_size
-		Person.__init__(self, position, dx, dy, radius, gamma, beta, width, height, SIR)
+		Person.__init__(self, position, velocity, radius, gamma, beta, width, height, SIR)
 
 	def update(self):
 
 		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
-			self.dx = -self.dx	
+			self.velocity[0] = -self.velocity[0]	
 			
 		if self.position[1] + self.radius > self.height or self.position[1] - self.radius < 0:
-			self.dy = -self.dy
+			self.velocity[1] = -self.velocity[1]
 
 
-		if np.linalg.norm(self.position - self.home) > self.home_size:
-			self.dy = -self.dy
-			self.dx = -self.dx
+		if np.linalg.norm(self.position - self.home) > (self.home_size - self.radius):
+			self.velocity = -self.velocity
 
 
-		self.position += np.array([self.dx, self.dy])
+		self.position += self.velocity
 		
 
 		if self.SIR == 'I' and random() < self.gamma:
@@ -131,6 +131,9 @@ class HomePerson(Person):
 
 
 def initial_infection(init_I, population):
+
+	# Given a population, infect a random subset of given size
+
 	shuffle(population)
 
 	for i in range(init_I):

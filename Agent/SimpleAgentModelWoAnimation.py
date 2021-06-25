@@ -47,5 +47,3 @@ plt.title("Agent Based SIR Model")
 plt.legend(loc=0)
 
 plt.savefig("./Plots/SimpleModel.png")
-
-

@@ -38,5 +38,3 @@ for k in range(repeats):
 
 
 np.savetxt('Data/SimpleAgentData.csv', data, fmt = '%.1f', delimiter=",", header="S,I,R")
-
-
