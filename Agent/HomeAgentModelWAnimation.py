@@ -15,19 +15,19 @@ T = 5000
 gamma = 0.0015
 beta = 0.05
 
-init_S = 21
-init_I = 0
+init_S = 200
+init_I = 10
 
-super_spreaders = 1
+super_spreaders = 10
 home_people = init_S + init_I - super_spreaders
 
 people_per_home = 5
 home_number = home_people // people_per_home
 
-radius = 20.0
-home_radius = 140.0
+radius = 10.0
+home_radius = 50.0
 
-columns = 2
+columns = 8
 
 overlap = 50
 w_offset = (overlap)/2

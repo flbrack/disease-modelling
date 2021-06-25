@@ -22,7 +22,7 @@ home_people = init_S + init_I - super_spreaders
 people_per_home = 5
 home_number = home_people // people_per_home
 
-radius = 5.0
+radius = 10.0
 home_radius = 70.0
 
 columns = 5
