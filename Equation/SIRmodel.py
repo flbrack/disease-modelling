@@ -4,8 +4,13 @@ from scipy.integrate import odeint
 
 plt.rcParams['figure.figsize'] = 10, 8
 
+plt.rcParams.update({
+    "text.usetex": True,
+    'font.size': 22
+})
+
 N = 1000 # Totoal population
-beta = 0.5 # Probability of infection on contact
+beta = 0.15 # Probability of infection on contact
 gamma = 0.04 # Recovery rate
 init_outbreak = 0.003
 
@@ -38,8 +43,10 @@ plt.figure()
 plt.plot(t, S, label='Susceptible')
 plt.plot(t, I, label='Infected')
 plt.plot(t, R, label='Recovered')
-plt.xlabel('Days from outbreak')
+plt.xticks([])
+plt.yticks([])
+plt.xlabel('Time')
 plt.ylabel('Population')
-plt.title('Disease Model - SIR')
+plt.title(f'SIR Model: $\gamma$={gamma} $\\beta$={beta}')
 plt.legend(loc=0)
-plt.savefig('./Plots/SIR.png')
+plt.savefig(f'./Plots/SIR_g={gamma}_b={beta}.png')

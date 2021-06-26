@@ -4,6 +4,12 @@ from scipy.integrate import odeint
 
 plt.rcParams['figure.figsize'] = 10, 8
 
+plt.rcParams.update({
+    "text.usetex": True,
+    'font.size': 22
+})
+
+
 N = 1000 # Population
 beta = 0.5 # Transmission rate
 gamma = 0.04 # Recovery rate
@@ -49,8 +55,10 @@ plt.plot(t, I, label='Infected')
 plt.plot(t, R, label='Recovered')
 plt.plot(t, D, label='Deceased')
 plt.plot(t, X, label='Quarantined')
-plt.xlabel('Days from outbreak')
+plt.xticks([])
+plt.yticks([])
+plt.xlabel('Time')
 plt.ylabel('Population')
-plt.title('Disease Model - SIRXD')
+plt.title(f'SIRXD Model: $\gamma$={gamma}, $\\beta$={beta}, $\mu$={mu}, $\kappa$={kappa}')
 plt.legend(loc=0)
-plt.savefig('./Plots/SIRXD.png')
+plt.savefig(f'./Plots/SIRXD_g={gamma}_b={beta}_m={mu}_k={kappa}.png')

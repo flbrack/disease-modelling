@@ -4,6 +4,12 @@ from scipy.integrate import odeint
 
 plt.rcParams['figure.figsize'] = 10, 8
 
+plt.rcParams.update({
+    "text.usetex": True,
+    'font.size': 22
+})
+
+
 N = 1000 # Population
 beta = 0.5 # Probability of infection on contact
 gamma = 0.04 # Recovery rate

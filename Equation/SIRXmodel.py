@@ -4,10 +4,17 @@ from scipy.integrate import odeint
 
 plt.rcParams['figure.figsize'] = 10, 8
 
+plt.rcParams.update({
+    "text.usetex": True,
+    'font.size': 22
+})
+
+
 N = 1000 # Population
 beta = 0.5 # Infection rate
 gamma = 0.04 # Recovery rate
 kappa = 0.03 # Rate of moving from infected to quarantine
+mu = 0.03
 
 # solve the system dy/dt = f(y, t)
 def f(y, t):
@@ -44,8 +51,8 @@ plt.plot(t, S, label='Susceptible')
 plt.plot(t, I, label='Infected')
 plt.plot(t, R, label='Recovered')
 plt.plot(t, D, label='Deceased')
-plt.xlabel('Days from outbreak')
+plt.xlabel('Times')
 plt.ylabel('Population')
-plt.title('Disease Model - SIRD')
+plt.title('SIRX Model')
 plt.legend(loc=0)
 plt.savefig('./Plots/SIRD.png')
