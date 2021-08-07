@@ -1,3 +1,10 @@
+'''
+This runs repeated simulations of the model with just the base Person agent that's defined in agents.py.
+The same simulation as is run in SimpleAgentModel.py.
+As these are repeated simulations, and can take a bit of time, there is no option to animate.
+If an animation is required, us the SimpleAgentModel.py script.
+The data from the simulations is written to a file and saved in the data folder.
+'''
 import numpy as np
 import agents
 
@@ -33,7 +40,7 @@ for k in range(repeats):
 				data[i + k*T, 0] += 1
 			elif person.SIR == 'I':
 				data[i + k*T, 1] += 1
-			elif person.SIR == 'R':
+			else:
 				data[i + k*T, 2] += 1
 
 

@@ -1,3 +1,7 @@
+''' 
+This is a simple script to take the data saved from repeated simulations and plot it.
+'''
+
 import matplotlib.pyplot as plt 
 import pandas as pd
 

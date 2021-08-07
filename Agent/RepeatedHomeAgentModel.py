@@ -1,4 +1,8 @@
-#! /opt/anaconda3/bin/python3.7
+'''
+This is for repeated simulations using the models with home agents and superspreaders.
+There are no animations, as the script can take a while to run.
+The data from the is written to a file in the data folder.
+'''
 import numpy as np
 import agents
 from random import random

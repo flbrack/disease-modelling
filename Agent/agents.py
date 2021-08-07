@@ -1,6 +1,12 @@
+'''
+This is essentially the backend of the simulations, where the agent classes are defined along with other functions for the setup of the simulations.
+The Person class is the base class, with most of the others being extensions of this.
+'''
 from random import random, shuffle
 import numpy as np
 import pygame
+
+# ------------- Some functions and set up for Pygame animations -------------------------------
 
 RED = (255,0,0,180)
 BLUE = (0,0,255,180)
@@ -8,12 +14,15 @@ GREEN = (0,255,0,180)
 
 def draw_circle_alpha(surface, color, center, radius):
 
-	# Special function so that the circles representing the agents can be transparent.
+	# Special function so that the circles representing the agents can have transparency.
 
     target_rect = pygame.Rect(center, (0, 0)).inflate((radius * 2, radius * 2))
     shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
     pygame.draw.circle(shape_surf, color, (radius, radius), radius)
     surface.blit(shape_surf, target_rect)
+
+
+# ------------- Agent classes used in simulations --------------------------------------------
 
 class Person:
 
@@ -71,38 +80,10 @@ class Person:
 			self.SIR = 'R'
 
 
-
-def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
-
-	# Creates an array of agents.
-
-	population = []
-
-	for i in range(init_S):
-		x = radius + random()*(width - 2*radius)
-		y = radius + random()*(height - 2*radius)
-
-		xspeed = (random() - 0.5)*2
-		yspeed = (random() - 0.5)*2
-
-
-		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), SIR='S', radius=radius , gamma=gamma, beta=beta, height=height, width=width) )
-
-	for i in range(init_I):
-		x = radius + random()*(width - 2*radius)
-		y = radius + random()*(height - 2*radius)
-
-		xspeed = (random() - 0.5)*2
-		yspeed = (random() - 0.5)*2
-
-		population.append( Person(position=np.array([x,y]),velocity=np.array([xspeed, yspeed]), SIR='I', radius=radius , gamma=gamma, beta=beta) )
-	
-	return population
-
-
 class HomePerson(Person):
 
 	# Extended agent class, will not leave a specified area, its "home"
+	# This then leads to the normal Person class becoming a superspreader.
 
 	def __init__(self, home, home_size, position, velocity, radius, gamma, beta, width, height, SIR):
 		
@@ -133,6 +114,8 @@ class HomePerson(Person):
 			self.SIR = 'R'
 
 
+# ----------------- Functions for initialising simulations --------------------------------------------------------
+
 def initial_infection(init_I, population):
 
 	# Given a population, infect a random subset of given size
@@ -142,3 +125,31 @@ def initial_infection(init_I, population):
 	for i in range(init_I):
 		person = population[int((random() * len(population)))]
 		person.SIR = "I"
+
+
+def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
+
+	# Creates an array of agents.
+
+	population = []
+
+	for i in range(init_S):
+		x = radius + random()*(width - 2*radius)
+		y = radius + random()*(height - 2*radius)
+
+		xspeed = (random() - 0.5)*2
+		yspeed = (random() - 0.5)*2
+
+
+		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), SIR='S', radius=radius , gamma=gamma, beta=beta, height=height, width=width) )
+
+	for i in range(init_I):
+		x = radius + random()*(width - 2*radius)
+		y = radius + random()*(height - 2*radius)
+
+		xspeed = (random() - 0.5)*2
+		yspeed = (random() - 0.5)*2
+
+		population.append( Person(position=np.array([x,y]),velocity=np.array([xspeed, yspeed]), SIR='I', radius=radius , gamma=gamma, beta=beta, width=width, height=height) )
+	
+	return population

@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 import agents
 from random import random
 
-WHITE = (255,255,255)
+ANIMATION_FLAG = True
 
+WHITE = (255,255,255)
 width, height = 800, 600
 
 T = 5000
@@ -21,11 +22,11 @@ init_I = 10
 super_spreaders = 10
 home_people = init_S + init_I - super_spreaders
 
-people_per_home = 5
+people_per_home = 10
 home_number = home_people // people_per_home
 
 radius = 10.0
-home_radius = 50.0
+home_radius = 60.0
 
 columns = 8
 
