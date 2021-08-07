@@ -17,10 +17,12 @@ WHITE = (255, 255, 255)
 width, height = 800, 600 # This determines the size of the environment for the agents
 radius = 10.0 # This determines the size of the agents
 
-T = 5000 # The length of time the simulation will run for. 5000 works well for SIR model.
+T = 500 # The length of time the simulation will run for. 5000 works well for SIR model.
 
+# The disease parameters
 gamma = 0.0015 # The rate of recovery
 beta = 0.05 # The infection rate
+mu = 0.0015 # The death rate
 
 init_S = 200 # The number of Susceptible agents at beginning of simulation
 init_I = 5 # The number of Infectious agents at beginning of simulation
@@ -31,12 +33,15 @@ if ANIMATION_FLAG: # Some set up for animation
 	clock = pygame.time.Clock()
 
 # This set ups the simulation using a function defined in agents.py
-population = agents.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
+population = agents.setup_death_simulation(init_S, init_I, radius, beta, gamma, mu, width, height)
+
+
 
 # Arrays to store the number of agents in each category at each time step
 Sarray = np.zeros(T)
 Iarray = np.zeros(T)
 Rarray = np.zeros(T)
+Darray = np.zeros(T)
 
 # The simulation loop
 for i in range(T):
@@ -57,8 +62,11 @@ for i in range(T):
 			Sarray[i] += 1
 		elif person.SIR == 'I':
 			Iarray[i] += 1
-		else:
+		elif person.SIR == 'R':
 			Rarray[i] += 1
+		else:
+			Darray[i] += 1
+	
 
 	# Things to take care of for animation
 	if ANIMATION_FLAG:
@@ -74,10 +82,11 @@ for i in range(T):
 plt.plot(Sarray, label='Susceptible', color=(0,0,1))
 plt.plot(Iarray, label='Infected', color=(0,1,0))
 plt.plot(Rarray, label='Recovered', color=(1,0,0))
+plt.plot(Darray, label='Dead', color=(0.3,0.3,0.3))
 
 plt.xlabel("Time")
 plt.ylabel("Number of people")
-plt.title("Agent Based SIR Model")
+plt.title("Agent Based SIRD Model")
 plt.legend(loc=0)
 
-plt.savefig("./Plots/SimpleModel.png")
+plt.savefig("./Plots/SimpleDeathModel.png")
