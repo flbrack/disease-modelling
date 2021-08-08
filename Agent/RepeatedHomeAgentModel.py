@@ -60,7 +60,7 @@ for k in tqdm( range(repeats) , desc="Loading…", ascii=False, ncols=75 ):
 			xspeed = (random() - 0.5)*2
 			yspeed = (random() - 0.5)*2
 
-			population.append( agents.HomePerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), home=home, home_size=home_radius, SIR='S', \
+			population.append( agents.HomePerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), home=home, home_size=home_radius, status='S', \
 				radius=radius , gamma=gamma, beta=beta, width=600, height=600) )
 
 
@@ -79,13 +79,13 @@ for k in tqdm( range(repeats) , desc="Loading…", ascii=False, ncols=75 ):
 				person.infect(otherperson)
 			person.update()
 
-			if person.SIR == 'S':
+			if person.status == 'S':
 				data[i + k*T, 0] += 1
-			elif person.SIR == 'I':
+			elif person.status == 'I':
 				data[i + k*T, 1] += 1
 				if type(person) == agents.Person:
 					data[i + k*T, 3] += 1
-			elif person.SIR == 'R':
+			elif person.status == 'R':
 				data[i + k*T, 2] += 1
 
 

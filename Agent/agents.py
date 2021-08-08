@@ -12,6 +12,7 @@ RED = (255,0,0,180)
 BLUE = (0,0,255,180)
 GREEN = (0,255,0,180)
 GREY = (84, 84, 84)
+PURPLE = (128,0,128)
 
 def draw_circle_alpha(surface, color, center, radius):
 
@@ -27,52 +28,50 @@ def draw_circle_alpha(surface, color, center, radius):
 
 class Person:
 
-	# Base class for agents.
+	'''
+	This is the base class for the agents. It has a init, draw, infect and update method.
+	Generally, only the init and update methods change in the extended classes.
+	It has three status options; Susceptible, Infectious or Recovered.
+	The infection rate is controlled by parameter beta.
+	The recovery rate is controlled by parameter gamma.
+	'''
 	
-	def __init__(self, position, velocity, radius, gamma, beta, width, height, SIR='S'):
+	def __init__(self, position, velocity, radius, gamma, beta, width, height, status='S'):
 		self.position = position
-		self.SIR = SIR
+		self.status = status
 		self.velocity = velocity
 		self.radius = radius
 		self.gamma = gamma
 		self.beta = beta
-		self.width = width
-		self.height = height
+		self.width = width # This is the width of the environment it is contained in.
+		self.height = height # This is the height of the environment it is contained in.
 
-		if self.SIR == 'S':    # We only ever initialise an agent with SIR = 'S' or 'I'
+		if self.status == 'S':    # We only ever initialise an agent with status = 'S' or 'I'
 			self.color = BLUE
-		elif self.SIR == 'I':
+		elif self.status == 'I':
 			self.color = GREEN
 
 	def draw(self, screen):
 
-	# Draws agent on screen, method is ignored when no animation is required.
-
-		# if self.SIR == 'S':
-		# 	self.color = BLUE 
-		# elif self.SIR =='I':
-		# 	self.color = GREEN
-		# elif self.SIR == 'R':
-		# 	self.color = RED
+	# Draws agent on screen.
 
 		draw_circle_alpha(screen, self.color, self.position, self.radius)
 
-	
 		
 	def infect(self, other):
 
 	# Method for an agent to infect another agent.
 
-		if self.SIR =='S' and other.SIR =='I':
+		if self.status =='S' and other.status =='I':
 			distance = np.linalg.norm(self.position - other.position)
 			
 			if distance <1.5*self.radius and  random() < self.beta:
-				self.SIR = 'I'
+				self.status = 'I'
 				self.color = GREEN
 
-	def update(self):
+	def position_update(self):
 
-	# Keeps agent moving and inside given area. Also controls when it recovers from disease.
+	# Keeps agent moving and inside given area.
 
 		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
 			self.velocity[0] = -self.velocity[0]	
@@ -82,24 +81,28 @@ class Person:
 
 		self.position += self.velocity
 		
+	def status_update(self):
 
-		if self.SIR == 'I' and random() < self.gamma:
-			self.SIR = 'R'
+	# Controls when agent turns from Infectious to Recovered.
+		if self.status == 'I' and random() < self.gamma:
+			self.status = 'R'
 			self.color = RED
 
 
 class HomePerson(Person):
 
-	# Extended agent class, will not leave a specified area, its "home"
-	# This then leads to the Person class becoming a superspreader.
-
-	def __init__(self, home, home_size, position, velocity, radius, gamma, beta, width, height, SIR):
+	'''
+	This is an extension of the base Person class such that each HomePerson has an area within the environment, which it stays within.
+	This is to simulate more closely real world, heterogeneous population mixing.
+	'''
+	
+	def __init__(self, home, home_size, position, velocity, radius, gamma, beta, width, height, status):
 		
 		self.home = home
 		self.home_size = home_size
-		Person.__init__(self, position, velocity, radius, gamma, beta, width, height, SIR)
+		Person.__init__(self, position, velocity, radius, gamma, beta, width, height, status)
 
-	def update(self):
+	def position_update(self):
 
 		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
 			self.velocity[0] = -self.velocity[0]
@@ -118,41 +121,71 @@ class HomePerson(Person):
 		self.position += self.velocity
 		
 
-		if self.SIR == 'I' and random() < self.gamma:
-			self.SIR = 'R'
-			self.color = RED
-
 
 class DeathPerson(Person):
 
-	# This extends the Person class so that they can be either Susceptible, Infectious, Recovered or Dead
+	'''
+	This is an extension of the Person class. It extends it by adding the status option of Dead.
+	The death rate is controlled by the parameter mu.
+	In animation, when an agent has status Dead, it will be coloured grey and it will stop moving.
+	'''
 
-	def __init__(self, position, velocity, radius, gamma, beta, mu, width, height, SIR):
+	def __init__(self, position, velocity, radius, gamma, beta, mu, width, height, status):
 		self.mu = mu
-		Person.__init__(self, position, velocity, radius, gamma, beta, width, height, SIR)
+		Person.__init__(self, position, velocity, radius, gamma, beta, width, height, status)
 
 
-	def update(self):
+	def status_update(self):
+
+		if self.status == 'I' and random() < self.gamma:
+			self.status = 'R'
+			self.color = RED
+
+		if self.status == 'I' and random() < self.mu:
+			self.status = 'D'
+			self.color = GREY
+			self.velocity = np.array([0, 0])
+
+
+class QuarantineDeathPerson(DeathPerson):
+
+	'''
+	This extends the DeathPerson class by adding the status option of Quarantined.
+	The quarantine rate is controlled by kappa.
+	The length of quarantine is controlled by mu and gamma.
+	Thus someone leaves quarantine if they have either recovered or died.
+	'''
+
+	def __init__(self, position, velocity, radius, gamma, beta, mu, kappa, width, height, status):
+		self.kappa = kappa
+		DeathPerson.__init__(self, position, velocity, radius, gamma, beta, mu, width, height, status)
+
+
+	def status_update(self):
 
 	# Keeps agent moving and inside given area. Also controls when it recovers or dies from disease.
 
-		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
-			self.velocity[0] = -self.velocity[0]	
-			
-		if self.position[1] + self.radius > self.height or self.position[1] - self.radius < 0:
-			self.velocity[1] = -self.velocity[1]
-
-		self.position += self.velocity
-		
-
-		if self.SIR == 'I' and random() < self.gamma:
-			self.SIR = 'R'
+		if self.status == 'I' and random() < self.gamma:
+			self.status = 'R'
 			self.color = RED
 
-		if self.SIR == 'I' and random() < self.mu:
-			self.SIR = 'D'
+		if self.status == 'I' and random() < self.mu:
+			self.status = 'D'
 			self.color = GREY
 			self.velocity = np.array([0, 0])
+
+		if self.status == 'I' and random() < self.kappa:
+			self.status = 'Q'
+			self.color = PURPLE
+
+		if self.status == 'Q' and random() < self.gamma:
+			self.status = 'R'
+			self.color = RED
+
+		if self.status == 'Q' and random() < self.mu:
+			self.status = 'D'
+			self.color = GREY
+				
 
 # ----------------- Functions for initialising simulations --------------------------------------------------------
 
@@ -164,7 +197,7 @@ def initial_infection(init_I, population):
 
 	for i in range(init_I):
 		person = population[int((random() * len(population)))]
-		person.SIR = "I"
+		person.status = "I"
 
 
 def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
@@ -181,7 +214,7 @@ def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
 		yspeed = (random() - 0.5)*2
 
 
-		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), SIR='S', radius=radius , gamma=gamma, beta=beta, height=height, width=width) )
+		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, height=height, width=width) )
 
 	for i in range(init_I):
 		x = radius + random()*(width - 2*radius)
@@ -190,7 +223,7 @@ def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), SIR='I', radius=radius , gamma=gamma, beta=beta, width=width, height=height) )
+		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='I', radius=radius , gamma=gamma, beta=beta, width=width, height=height) )
 	
 	return population
 
@@ -209,7 +242,7 @@ def setup_death_simulation(init_S, init_I, radius, beta, gamma, mu, width, heigh
 		yspeed = (random() - 0.5)*2
 
 
-		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), SIR='S', radius=radius , gamma=gamma, beta=beta, mu=mu, height=height, width=width) )
+		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, mu=mu, height=height, width=width) )
 
 	for i in range(init_I):
 		x = radius + random()*(width - 2*radius)
@@ -218,6 +251,34 @@ def setup_death_simulation(init_S, init_I, radius, beta, gamma, mu, width, heigh
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), SIR='I', radius=radius , gamma=gamma, beta=beta, mu=mu, width=width, height=height) )
+		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='I', radius=radius , gamma=gamma, beta=beta, mu=mu, width=width, height=height) )
+	
+	return population
+
+
+def setup_quarantine_death_simulation(init_S, init_I, radius, beta, gamma, mu, kappa, width, height):
+
+	# Creates an array of agents.
+
+	population = []
+
+	for i in range(init_S):
+		x = radius + random()*(width - 2*radius)
+		y = radius + random()*(height - 2*radius)
+
+		xspeed = (random() - 0.5)*2
+		yspeed = (random() - 0.5)*2
+
+
+		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, mu=mu, height=height, width=width) )
+
+	for i in range(init_I):
+		x = radius + random()*(width - 2*radius)
+		y = radius + random()*(height - 2*radius)
+
+		xspeed = (random() - 0.5)*2
+		yspeed = (random() - 0.5)*2
+
+		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='I', radius=radius , gamma=gamma, beta=beta, mu=mu, width=width, height=height) )
 	
 	return population

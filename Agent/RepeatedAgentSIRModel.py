@@ -36,12 +36,12 @@ for k in range(repeats):
 				person.infect(otherperson)
 			person.update()
 
-			if person.SIR == 'S':
+			if person.status == 'S':
 				data[i + k*T, 0] += 1
-			elif person.SIR == 'I':
+			elif person.status == 'I':
 				data[i + k*T, 1] += 1
 			else:
 				data[i + k*T, 2] += 1
 
 
-np.savetxt('Data/SimpleAgentData.csv', data, fmt = '%.1f', delimiter=",", header="S,I,R")
+np.savetxt('Data/RepeatedSIRModel.csv', data, fmt = '%.1f', delimiter=",", header="S,I,R")

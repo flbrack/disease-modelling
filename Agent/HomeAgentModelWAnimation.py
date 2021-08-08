@@ -58,7 +58,7 @@ for i in range(people_per_home):
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( agents.HomePerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), home=home, home_size=home_radius, SIR='S', \
+		population.append( agents.HomePerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), home=home, home_size=home_radius, status='S', \
 			radius=radius , gamma=gamma, beta=beta, width=width, height=height) )
 
 
@@ -92,13 +92,13 @@ for i in range(T):
 		person.update()
 		person.draw(screen)
 
-		if person.SIR == 'S':
+		if person.status == 'S':
 			Sarray[i] += 1
-		elif person.SIR == 'I':
+		elif person.status == 'I':
 			Iarray[i] += 1
 			if type(person) == agents.Person:
 				super_spreader_array[i] += 1
-		elif person.SIR == 'R':
+		elif person.status == 'R':
 			Rarray[i] += 1
 
 	pygame.display.update()
@@ -115,7 +115,7 @@ plt.plot(super_spreader_array, label="Super Spreader", color="black")
 
 plt.xlabel("Time")
 plt.ylabel("Number of people")
-plt.title("Agent Based SIR Model")
+plt.title("Agent Based status Model")
 plt.legend(loc=0)
 
 plt.savefig("./Plots/HomeAgentWOverlapAnimated.png")
