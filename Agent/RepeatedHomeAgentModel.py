@@ -14,7 +14,7 @@ width, height = 600, 600
 
 T = 5000
 
-gamma = 0.0015
+gamma = 0.015
 beta = 0.05
 
 init_S = 200
@@ -77,7 +77,9 @@ for k in tqdm( range(repeats) , desc="Loading…", ascii=False, ncols=75 ):
 				if person==otherperson:
 					continue
 				person.infect(otherperson)
-			person.update()
+			if i % 10 == 0:
+				person.status_update()
+			person.postition_update()
 
 			if person.status == 'S':
 				data[i + k*T, 0] += 1

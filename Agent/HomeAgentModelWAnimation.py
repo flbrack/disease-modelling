@@ -89,7 +89,11 @@ for i in range(T):
 			if person==otherperson:
 				continue
 			person.infect(otherperson)
-		person.update()
+		if i % 10 == 0:
+			person.status_update()
+
+		person.position_update()			
+		
 		person.draw(screen)
 
 		if person.status == 'S':

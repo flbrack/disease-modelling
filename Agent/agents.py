@@ -11,8 +11,8 @@ import pygame
 RED = (255,0,0,180)
 BLUE = (0,0,255,180)
 GREEN = (0,255,0,180)
-GREY = (84, 84, 84)
-PURPLE = (128,0,128)
+GREY = (84,84,84,180)
+PURPLE = (128,0,128,180)
 
 def draw_circle_alpha(surface, color, center, radius):
 
@@ -161,6 +161,23 @@ class QuarantineDeathPerson(DeathPerson):
 		DeathPerson.__init__(self, position, velocity, radius, gamma, beta, mu, width, height, status)
 
 
+	def infect(self, other):
+
+	# Method for an agent to infect another agent.
+
+		if self.status =='S' and other.status =='I':
+			distance = np.linalg.norm(self.position - other.position)
+			
+			if distance <1.5*self.radius and  random() < self.beta:
+			
+				if random() < self.kappa:
+					self.status = 'Q'
+					self.color = PURPLE
+				else:
+					self.status = 'I'
+					self.color = GREEN
+
+
 	def status_update(self):
 
 	# Keeps agent moving and inside given area. Also controls when it recovers or dies from disease.
@@ -174,10 +191,6 @@ class QuarantineDeathPerson(DeathPerson):
 			self.color = GREY
 			self.velocity = np.array([0, 0])
 
-		if self.status == 'I' and random() < self.kappa:
-			self.status = 'Q'
-			self.color = PURPLE
-
 		if self.status == 'Q' and random() < self.gamma:
 			self.status = 'R'
 			self.color = RED
@@ -185,6 +198,7 @@ class QuarantineDeathPerson(DeathPerson):
 		if self.status == 'Q' and random() < self.mu:
 			self.status = 'D'
 			self.color = GREY
+			self.velocity = np.array([0,0])
 				
 
 # ----------------- Functions for initialising simulations --------------------------------------------------------
@@ -214,7 +228,7 @@ def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
 		yspeed = (random() - 0.5)*2
 
 
-		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, height=height, width=width) )
+		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, width=width, height=height) )
 
 	for i in range(init_I):
 		x = radius + random()*(width - 2*radius)
@@ -242,7 +256,7 @@ def setup_death_simulation(init_S, init_I, radius, beta, gamma, mu, width, heigh
 		yspeed = (random() - 0.5)*2
 
 
-		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, mu=mu, height=height, width=width) )
+		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, mu=mu, width=width, height=height) )
 
 	for i in range(init_I):
 		x = radius + random()*(width - 2*radius)
@@ -270,7 +284,7 @@ def setup_quarantine_death_simulation(init_S, init_I, radius, beta, gamma, mu, k
 		yspeed = (random() - 0.5)*2
 
 
-		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, mu=mu, height=height, width=width) )
+		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, mu=mu, kappa=kappa, width=width, height=height) )
 
 	for i in range(init_I):
 		x = radius + random()*(width - 2*radius)
@@ -279,6 +293,6 @@ def setup_quarantine_death_simulation(init_S, init_I, radius, beta, gamma, mu, k
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='I', radius=radius , gamma=gamma, beta=beta, mu=mu, width=width, height=height) )
+		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='I', radius=radius , gamma=gamma, beta=beta, mu=mu, kappa=kappa, width=width, height=height) )
 	
 	return population

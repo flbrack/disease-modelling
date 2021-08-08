@@ -20,9 +20,9 @@ radius = 10.0 # This determines the size of the agents
 T = 500 # The length of time the simulation will run for. 5000 works well for status model.
 
 # The disease parameters
-gamma = 0.0015 # The rate of recovery
+gamma = 0.015 # The rate of recovery
 beta = 0.05 # The infection rate
-mu = 0.0015 # The death rate
+mu = 0.015 # The death rate
 
 init_S = 200 # The number of Susceptible agents at beginning of simulation
 init_I = 5 # The number of Infectious agents at beginning of simulation
@@ -53,7 +53,8 @@ for i in range(T):
 			if person==otherperson:
 				continue
 			person.infect(otherperson)
-		person.status_update()
+		if i % 10 == 0:
+			person.status_update()
 		person.position_update()
 
 		if ANIMATION_FLAG:

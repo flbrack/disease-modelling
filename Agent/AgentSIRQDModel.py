@@ -1,9 +1,3 @@
-'''
-This runs one instance of the basic simulation, which is composed solely of agents of the base Person class defined in agents.py.
-This is analagous to the status equation based model.
-It can be run with or without animation by setting the ANIMATION_FLAG to true or false.
-The data from the simulation is not stored but is immediately plotted and the plot saved to the Plots folder.
-'''
 import numpy as np
 import pygame
 import sys
@@ -19,8 +13,11 @@ radius = 10.0 # This determines the size of the agents
 
 T = 5000 # The length of time the simulation will run for. 5000 works well for status model.
 
+# The disease parameters
 gamma = 0.015 # The rate of recovery
 beta = 0.05 # The infection rate
+mu = 0.015 # The death rate
+kappa = 0.5 # The quarantine rate
 
 init_S = 200 # The number of Susceptible agents at beginning of simulation
 init_I = 5 # The number of Infectious agents at beginning of simulation
@@ -31,12 +28,16 @@ if ANIMATION_FLAG: # Some set up for animation
 	clock = pygame.time.Clock()
 
 # This set ups the simulation using a function defined in agents.py
-population = agents.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
+population = agents.setup_quarantine_death_simulation(init_S, init_I, radius, beta, gamma, mu, kappa, width, height)
+
+
 
 # Arrays to store the number of agents in each category at each time step
 Sarray = np.zeros(T)
 Iarray = np.zeros(T)
 Rarray = np.zeros(T)
+Darray = np.zeros(T)
+Qarray = np.zeros(T)
 
 # The simulation loop
 for i in range(T):
@@ -48,6 +49,10 @@ for i in range(T):
 			if person==otherperson:
 				continue
 			person.infect(otherperson)
+		
+		# Each agent's status is only updated every 10th timestep.
+		# This stops them from turning from I to D or I to R etc. too quickly.
+		# And it keeps gamma and mu values on more realistic scale.
 		if i % 10 == 0:
 			person.status_update()
 		
@@ -60,8 +65,13 @@ for i in range(T):
 			Sarray[i] += 1
 		elif person.status == 'I':
 			Iarray[i] += 1
-		else:
+		elif person.status == 'R':
 			Rarray[i] += 1
+		elif person.status == 'D':
+			Darray[i] += 1
+		else:
+			Qarray[i] += 1
+	
 
 	# Things to take care of for animation
 	if ANIMATION_FLAG:
@@ -77,10 +87,12 @@ for i in range(T):
 plt.plot(Sarray, label='Susceptible', color=(0,0,1))
 plt.plot(Iarray, label='Infected', color=(0,1,0))
 plt.plot(Rarray, label='Recovered', color=(1,0,0))
+plt.plot(Darray, label='Dead', color=(0.3,0.3,0.3))
+plt.plot(Qarray, label='Quarantined', color=(0.5,0,0.5))
 
 plt.xlabel("Time")
 plt.ylabel("Number of people")
-plt.title("Agent Based status Model")
+plt.title("Agent Based SIRQD Model")
 plt.legend(loc=0)
 
-plt.savefig("./Plots/AgentSIRModel.png")
+plt.savefig("./Plots/AgentSIRQDModel.png")
