@@ -31,7 +31,7 @@ if ANIMATION_FLAG: # Some set up for animation
 	clock = pygame.time.Clock()
 
 # This set ups the simulation using a function defined in agents.py
-population = agents.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
+population = agents.create_SIR_population(init_S, init_I, radius, beta, gamma, width, height)
 
 # Arrays to store the number of agents in each category at each time step
 Sarray = np.zeros(T)

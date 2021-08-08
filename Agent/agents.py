@@ -1,5 +1,6 @@
 '''
-This is essentially the backend of the simulations, where the agent classes are defined along with other functions for the setup of the simulations.
+This is the backend of the simulations, where the agent classes are defined, 
+along with other functions for the setup of the simulations.
 The Person class is the base class, with most of the others being extensions of this.
 '''
 from random import random, shuffle
@@ -37,12 +38,12 @@ class Person:
 	'''
 	
 	def __init__(self, position, velocity, radius, gamma, beta, width, height, status='S'):
-		self.position = position
-		self.status = status
-		self.velocity = velocity
-		self.radius = radius
-		self.gamma = gamma
-		self.beta = beta
+		self.position = position # The postition of the agent
+		self.status = status # The health status of the agent
+		self.velocity = velocity # The velocity of the agent
+		self.radius = radius # The radius of the agent
+		self.gamma = gamma # The recovery rate of the disease
+		self.beta = beta # The infection rate of the disease
 		self.width = width # This is the width of the environment it is contained in.
 		self.height = height # This is the height of the environment it is contained in.
 
@@ -54,14 +55,12 @@ class Person:
 	def draw(self, screen):
 
 	# Draws agent on screen.
-
 		draw_circle_alpha(screen, self.color, self.position, self.radius)
 
 		
 	def infect(self, other):
 
 	# Method for an agent to infect another agent.
-
 		if self.status =='S' and other.status =='I':
 			distance = np.linalg.norm(self.position - other.position)
 			
@@ -72,7 +71,6 @@ class Person:
 	def position_update(self):
 
 	# Keeps agent moving and inside given area.
-
 		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
 			self.velocity[0] = -self.velocity[0]	
 			
@@ -131,7 +129,7 @@ class DeathPerson(Person):
 	'''
 
 	def __init__(self, position, velocity, radius, gamma, beta, mu, width, height, status):
-		self.mu = mu
+		self.mu = mu # The death rate of the disease
 		Person.__init__(self, position, velocity, radius, gamma, beta, width, height, status)
 
 
@@ -157,7 +155,8 @@ class QuarantineDeathPerson(DeathPerson):
 	'''
 
 	def __init__(self, position, velocity, radius, gamma, beta, mu, kappa, width, height, status):
-		self.kappa = kappa
+
+		self.kappa = kappa # The chance of being quarantined after infection
 		DeathPerson.__init__(self, position, velocity, radius, gamma, beta, mu, width, height, status)
 
 
@@ -203,98 +202,120 @@ class QuarantineDeathPerson(DeathPerson):
 			self.velocity = np.array([0,0])
 				
 
+
+
+
+class Hospitalisations(QuarantineDeathPerson):
+
+	def __init__(self, max_hospital):
+
+		self.max_hospital = max_hospital
+
+	def status_update(self):
+		pass
+
+	def hospital_status_update(self):
+		pass
+
+
+
 # ----------------- Functions for initialising simulations --------------------------------------------------------
 
 def initial_infection(init_I, population):
 
-	# Given a population, infect a random subset of given size
+	# Given a population, possibly of different agent classes; infects a random subset of given size
 
 	shuffle(population)
-
 	for i in range(init_I):
 		person = population[int((random() * len(population)))]
 		person.status = "I"
 
 
-def setup_simulation(init_S, init_I, radius, beta, gamma, width, height):
+def create_SIR_population(N, init_I, radius, beta, gamma, width, height):
 
 	# Creates an array of agents.
-
 	population = []
 
-	for i in range(init_S):
+	for i in range(N):
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
+		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
+									gamma=gamma, beta=beta, width=width, height=height) )
 
-		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, width=width, height=height) )
+	initial_infection(init_I, population)
 
-	for i in range(init_I):
+	return population
+
+
+def create_SIRD_population(N, init_I, radius, beta, gamma, mu, width, height):
+
+	# Creates an array of agents.
+	population = []
+
+	for i in range(N):
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='I', radius=radius , gamma=gamma, beta=beta, width=width, height=height) )
+		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
+										gamma=gamma, beta=beta, mu=mu, width=width, height=height) )
+
+	initial_infection(init_I, population)
 	
 	return population
 
 
-def setup_death_simulation(init_S, init_I, radius, beta, gamma, mu, width, height):
+def create_SIRQD_population(N, init_I, radius, beta, gamma, mu, kappa, width, height):
 
 	# Creates an array of agents.
-
 	population = []
 
-	for i in range(init_S):
+	for i in range(N):
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
+		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
+												gamma=gamma, beta=beta, mu=mu, kappa=kappa, width=width, height=height) )
 
-		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, mu=mu, width=width, height=height) )
+	initial_infection(init_I, population)
 
-	for i in range(init_I):
-		x = radius + random()*(width - 2*radius)
-		y = radius + random()*(height - 2*radius)
-
-		xspeed = (random() - 0.5)*2
-		yspeed = (random() - 0.5)*2
-
-		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='I', radius=radius , gamma=gamma, beta=beta, mu=mu, width=width, height=height) )
-	
 	return population
 
 
-def setup_quarantine_death_simulation(init_S, init_I, radius, beta, gamma, mu, kappa, width, height):
+def create_SIRQD_population_with_age_profile(N_old, N_young, init_I, radius, beta, gamma, old_mu, young_mu, kappa, width, height):
 
 	# Creates an array of agents.
-
 	population = []
 
-	for i in range(init_S):
+	for _ in range(N_old):
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
+		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
+												gamma=gamma, beta=beta, mu=old_mu, kappa=kappa, width=width, height=height) )
 
-		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius , gamma=gamma, beta=beta, mu=mu, kappa=kappa, width=width, height=height) )
-
-	for i in range(init_I):
+	for _ in range(N_young):
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
 		xspeed = (random() - 0.5)*2
 		yspeed = (random() - 0.5)*2
 
-		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='I', radius=radius , gamma=gamma, beta=beta, mu=mu, kappa=kappa, width=width, height=height) )
-	
+		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
+												gamma=gamma, beta=beta, mu=young_mu, kappa=kappa, width=width, height=height) )
+
+	initial_infection(init_I, population)
+
 	return population

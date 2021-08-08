@@ -28,7 +28,7 @@ if ANIMATION_FLAG: # Some set up for animation
 	clock = pygame.time.Clock()
 
 # This set ups the simulation using a function defined in agents.py
-population = agents.setup_quarantine_death_simulation(init_S, init_I, radius, beta, gamma, mu, kappa, width, height)
+population = agents.create_SIRQD_population(init_S, init_I, radius, beta, gamma, mu, kappa, width, height)
 
 
 

@@ -25,7 +25,7 @@ data = np.zeros([repeats*T,3])
 
 for k in range(repeats):
 
-	population = agents.setup_simulation(init_S, init_I, radius, beta, gamma, width, height)
+	population = agents.create_SIR_population(init_S, init_I, radius, beta, gamma, width, height)
 
 	for i in range(T):
 

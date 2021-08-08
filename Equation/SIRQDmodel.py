@@ -22,13 +22,13 @@ def f(y, t):
     Ii = y[1]
     Ri = y[2]
     Di = y[3]
-    Xi = y[4]
+    Qi = y[4]
 
     f0 = - ( beta * Si * Ii )/N
     f1 = ( beta * Si * Ii )/N - (gamma * Ii) - (mu * Ii) - (kappa * Ii)
-    f2 = gamma * Ii + gamma * Xi
-    f3 = mu * Ii + mu * Xi
-    f4 = (kappa * Ii) - (mu * Xi) - (gamma * Xi)
+    f2 = gamma * Ii + gamma * Qi
+    f3 = mu * Ii + mu * Qi
+    f4 = (kappa * Ii) - (mu * Qi) - (gamma * Qi)
     return [f0, f1, f2, f3, f4]
 
 # initial conditions
@@ -37,7 +37,7 @@ S0 = N-I0               # initial infected
 R0 = 0
 D0 = 0                 # initial recovered
 X0 = 0
-y0 = [S0, I0, R0, D0, X0]     # initial condition vector
+y0 = [S0, I0, R0, D0, Q0]     # initial condition vector
 t  = np.linspace(0, 150., 1000)         # time grid
 
 # solve the DEs
@@ -46,7 +46,7 @@ S = soln[:, 0]
 I = soln[:, 1]
 R = soln[:, 2]
 D = soln[:, 3]
-X = soln[:, 4]
+Q = soln[:, 4]
 
 # plot results
 plt.figure()
@@ -54,11 +54,11 @@ plt.plot(t, S, label='Susceptible')
 plt.plot(t, I, label='Infected')
 plt.plot(t, R, label='Recovered')
 plt.plot(t, D, label='Deceased')
-plt.plot(t, X, label='Quarantined')
+plt.plot(t, Q, label='Quarantined')
 plt.xticks([])
 plt.yticks([])
 plt.xlabel('Time')
 plt.ylabel('Population')
-plt.title(f'SIRXD Model: $\gamma$={gamma}, $\\beta$={beta}, $\mu$={mu}, $\kappa$={kappa}')
+plt.title(f'SIRQD Model: $\gamma$={gamma}, $\\beta$={beta}, $\mu$={mu}, $\kappa$={kappa}')
 plt.legend(loc=0)
-plt.savefig(f'./Plots/SIRXD_g={gamma}_b={beta}_m={mu}_k={kappa}.png')
+plt.savefig(f'./Plots/SIRQD_g={gamma}_b={beta}_m={mu}_k={kappa}.png')
