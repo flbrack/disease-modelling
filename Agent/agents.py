@@ -173,6 +173,7 @@ class QuarantineDeathPerson(DeathPerson):
 				if random() < self.kappa:
 					self.status = 'Q'
 					self.color = PURPLE
+					self.velocity = np.array([0,0])
 				else:
 					self.status = 'I'
 					self.color = GREEN
@@ -194,6 +195,7 @@ class QuarantineDeathPerson(DeathPerson):
 		if self.status == 'Q' and random() < self.gamma:
 			self.status = 'R'
 			self.color = RED
+			self.velocity = np.array([(random() - 0.5)*2,(random() - 0.5)*2]) 
 
 		if self.status == 'Q' and random() < self.mu:
 			self.status = 'D'
