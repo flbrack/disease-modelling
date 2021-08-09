@@ -78,7 +78,7 @@ All files that begin with `Agent` can be ran and these are the files that will b
 python3 AgentSIRModel.py
 ```
 
-Most importantly, these are the scripts that produce animations. Animations can be turned on and off by editing the script and changing the `ANIMATION_FLAG` constant to either `True` or `False`. The animations are implemented using the `pygame` [library](https://www.pygame.org/news). This is based on the [SDL library](https://www.libsdl.org/), which renders graphics using the CPU, instead of the GPU. As such, it is not always the most performant, amd to keep the animations smooth, a reasonable number of agents should be choosen.u
+Most importantly, these are the scripts that produce animations. Animations can be turned on and off by editing the script and changing the `ANIMATION_FLAG` constant to either `True` or `False`. For the simulations themselves the `numpy` [library](https://numpy.org/), as well as Python's standard `random` library are used. The animations are implemented using the `pygame` [library](https://www.pygame.org/news). This is based on the [SDL library](https://www.libsdl.org/), which renders graphics using the CPU, instead of the GPU. As such, it is not always the most performant, amd to keep the animations smooth, a reasonable number of agents should be choosen.u
 
 In each of these scripts there are a number of tunable parameters, located near the top in each script, such as population size, infection rate, etc.
 
@@ -88,7 +88,7 @@ Also located in this folder are the files beginning with `Repeated`. These run e
 
 These also have a number of tunable parameters located near the top of the scripts. However, as these take so long to run, and are just repeated simulations of the same type as the animation scripts, I would recommend just running the animation scripts.
 
-The data that is produced from these scripts is plotted using the `DataPlotting.py` script.
+The `csv` data that is produced from these scripts is plotted using the `DataPlotting.py` script, again using `matplotlib`, as well as the `pandas` [library](https://pandas.pydata.org/).
 
 ### The `agents.py` File
 
