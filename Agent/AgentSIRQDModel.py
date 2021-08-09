@@ -8,7 +8,6 @@ import agents
 
 ANIMATION_FLAG = True  # Change this depending on if you want an animation or not.
 
-WHITE = (255, 255, 255)
 width, height = 800, 600 # This determines the size of the environment for the agents
 radius = 10.0 # This determines the size of the agents
 
@@ -23,6 +22,7 @@ kappa = 0.5 # The quarantine rate
 N = 100 # The total number of agents
 init_I = 5 # The number of Infectious agents at beginning of simulation
 
+WHITE = (255, 255, 255)
 if ANIMATION_FLAG: # Some set up for animation
 	screen = pygame.display.set_mode((width,height))
 	screen.fill(WHITE)

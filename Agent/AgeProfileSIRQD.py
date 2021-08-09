@@ -7,7 +7,6 @@ import agents
 
 ANIMATION_FLAG = True  # Change this depending on if you want an animation or not.
 
-WHITE = (255, 255, 255)
 width, height = 800, 600 # This determines the size of the environment for the agents
 radius = 10.0 # This determines the size of the agents
 
@@ -24,6 +23,8 @@ N_old = 70 # The number of old people
 N_young = 130 # The number of young people
 init_I = 5 # The number of Infectious agents at beginning of simulation
 
+
+WHITE = (255, 255, 255)
 if ANIMATION_FLAG: # Some set up for animation
 	screen = pygame.display.set_mode((width,height))
 	screen.fill(WHITE)
