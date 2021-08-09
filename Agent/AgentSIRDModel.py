@@ -14,7 +14,9 @@ import agents
 
 ANIMATION_FLAG = True  # Change this depending on if you want an animation or not.
 
-width, height = 800, 600 # This determines the size of the environment for the agents
+#------------------- Tunable Parameters -----------------------------------------------
+
+width, height = 800, 600 # This determines the size of the environment for the agents, as well as the animation window
 radius = 15.0 # This determines the size of the agents
 
 T = 500 # The length of time the simulation will run for. 2000 works well.
@@ -26,6 +28,8 @@ mu = 0.015 # The death rate
 
 N = 100 # The total number of agents
 init_I = 5 # The number of Infectious agents at beginning of simulation
+
+#-----------------------------------------------------------------------------------
 
 WHITE = (255, 255, 255)
 if ANIMATION_FLAG: # Some set up for animation
