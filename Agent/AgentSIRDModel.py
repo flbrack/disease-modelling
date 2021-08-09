@@ -24,7 +24,7 @@ gamma = 0.015 # The rate of recovery
 beta = 0.05 # The infection rate
 mu = 0.015 # The death rate
 
-init_S = 200 # The number of Susceptible agents at beginning of simulation
+N = 200 # The total number of agents
 init_I = 5 # The number of Infectious agents at beginning of simulation
 
 if ANIMATION_FLAG: # Some set up for animation
@@ -33,8 +33,7 @@ if ANIMATION_FLAG: # Some set up for animation
 	clock = pygame.time.Clock()
 
 # This set ups the simulation using a function defined in agents.py
-population = agents.create_SIRD_population(init_S, init_I, radius, beta, gamma, mu, width, height)
-
+population = agents.create_SIRD_population(N, init_I, radius, beta, gamma, mu, width, height)
 
 
 # Arrays to store the number of agents in each category at each time step

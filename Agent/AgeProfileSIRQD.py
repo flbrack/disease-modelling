@@ -20,8 +20,8 @@ old_mu = 0.04 # The death rate for old people
 young_mu = 0.015 # The death rate for young people
 kappa = 0.5 # The quarantine rate
 
-N_old = 70
-N_young = 130
+N_old = 70 # The number of old people
+N_young = 130 # The number of young people
 init_I = 5 # The number of Infectious agents at beginning of simulation
 
 if ANIMATION_FLAG: # Some set up for animation

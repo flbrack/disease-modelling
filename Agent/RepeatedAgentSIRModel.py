@@ -15,9 +15,9 @@ T = 5000
 gamma = 0.015
 beta = 0.05
 radius = 10.0
-init_S = 95
-init_I = 5
 
+N = 200
+init_I = 5
 
 repeats = 10
 
@@ -25,7 +25,7 @@ data = np.zeros([repeats*T,3])
 
 for k in range(repeats):
 
-	population = agents.create_SIR_population(init_S, init_I, radius, beta, gamma, width, height)
+	population = agents.create_SIR_population(N, init_I, radius, beta, gamma, width, height)
 
 	for i in range(T):
 

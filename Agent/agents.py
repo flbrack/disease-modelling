@@ -229,6 +229,7 @@ def initial_infection(init_I, population):
 	for i in range(init_I):
 		person = population[int((random() * len(population)))]
 		person.status = "I"
+		person.color = GREEN
 
 
 def create_SIR_population(N, init_I, radius, beta, gamma, width, height):
