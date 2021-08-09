@@ -8,12 +8,11 @@ from random import random
 
 ANIMATION_FLAG = True
 
-WHITE = (255,255,255)
 width, height = 800, 600
 
 T = 5000
 
-gamma = 0.0015
+gamma = 0.015
 beta = 0.05
 
 init_S = 200
@@ -40,6 +39,7 @@ for i in range(columns):
 		homes.append(np.array([w_offset + home_radius + i*(width-overlap)//columns, h_offset + home_radius+j*(height-overlap)//(home_number//columns)]))
 
 
+WHITE = (255,255,255)
 screen = pygame.display.set_mode((width,height))
 screen.fill(WHITE)
 clock = pygame.time.Clock()

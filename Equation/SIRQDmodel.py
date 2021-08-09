@@ -2,19 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
-plt.rcParams['figure.figsize'] = 10, 8
-
-plt.rcParams.update({
-    "text.usetex": True,
-    'font.size': 22
-})
 
 
+# --------------- Tunable parameters ----------------------
 N = 1000 # Population
-beta = 0.5 # Transmission rate
+beta = 0.5 # Infection rate
 gamma = 0.04 # Recovery rate
 mu = 0.03 # Death rate
 kappa = 0.04 # Quarantine rate
+init_I = 3 # initial number of infectious people
 
 # solve the system dy/dt = f(y, t)
 def f(y, t):
@@ -32,11 +28,11 @@ def f(y, t):
     return [f0, f1, f2, f3, f4]
 
 # initial conditions
-I0 = 3           # initial susceptible
+I0 = init_I           # initial susceptible
 S0 = N-I0               # initial infected
 R0 = 0
 D0 = 0                 # initial recovered
-X0 = 0
+Q0 = 0
 y0 = [S0, I0, R0, D0, Q0]     # initial condition vector
 t  = np.linspace(0, 150., 1000)         # time grid
 
@@ -49,6 +45,11 @@ D = soln[:, 3]
 Q = soln[:, 4]
 
 # plot results
+plt.rcParams['figure.figsize'] = 10, 8
+plt.rcParams.update({
+    "text.usetex": True,
+    'font.size': 22
+})
 plt.figure()
 plt.plot(t, S, label='Susceptible')
 plt.plot(t, I, label='Infected')
