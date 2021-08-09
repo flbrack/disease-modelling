@@ -1,4 +1,13 @@
-from Agent.RepeatedAgentSIRModel import N
+'''
+This is analagous to the SIRQD equation based model.
+It can be run with or without animation by changing the ANIMATION_FLAG constant to True or False.
+Agents can have five possible health statuses; Susceptible, Infectious, Recovered, Quarantined, Dead.
+When Quarantined an agent will be coloured purple and will not move.
+From Quarantine it then becomes either Recovered or Dead and will change colour accordingly.
+The percentage of agents that enter quarantine is controlled by the parameter kappa.
+As soon as an agent is infected, it has a probability of kappa of entering quarantine.
+The results are immediatly plotted and the plot saved in the Plots folder.
+'''
 import numpy as np
 import pygame
 import sys
@@ -9,9 +18,9 @@ import agents
 ANIMATION_FLAG = True  # Change this depending on if you want an animation or not.
 
 width, height = 800, 600 # This determines the size of the environment for the agents
-radius = 10.0 # This determines the size of the agents
+radius = 15.0 # This determines the size of the agents
 
-T = 5000 # The length of time the simulation will run for. 5000 works well for status model.
+T = 2000 # The length of time the simulation will run for. 2000 works well for status model.
 
 # The disease parameters
 gamma = 0.015 # The rate of recovery

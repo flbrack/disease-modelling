@@ -1,9 +1,12 @@
 '''
-Many diseases affect people in older age groups more than younger age groups.
-This simulation implements this possibility inside a regular agent based SIRQD model.
-A population is created with two age profiles. Agents can be either old or young.
-The agents in the old population have a higher death rate.
-The results are immediately plotted and save to the Plots folder.
+The death rate from a disease is not always constant.
+If the number of people in hospital saturates the availability of hospital beds,
+then it is expected that the death rate would increase.
+This simulation implements this scenario, inside of a SIRQD simulation.
+The parameter hospital_limit controls when the hospital system is saturated.
+The parameter hospital_factor controls by what factor the death rate increase when the hospital system is saturated.
+It can be run with or without animation by changing the ANIMATION_FLAG constant to True or False.
+The results are immediatly plotted and the plot saved in the Plots folder.
 '''
 import numpy as np
 import pygame
@@ -17,19 +20,19 @@ ANIMATION_FLAG = True  # Change this depending on if you want an animation or no
 width, height = 800, 600 # This determines the size of the environment for the agents
 radius = 15.0 # This determines the size of the agents
 
-T = 2000 # The length of time the simulation will run for. 2000 works well.
+T = 2000 # The length of time the simulation will run for. 2000 works well for status model.
 
 # The disease parameters
-beta = 0.05 # The infection rate
 gamma = 0.015 # The rate of recovery
-old_mu = 0.04 # The death rate for old people
-young_mu = 0.015 # The death rate for young people
+beta = 0.05 # The infection rate
+mu = 0.015 # The death rate
 kappa = 0.5 # The quarantine rate
 
-N_old = 30 # The number of old people
-N_young = 70 # The number of young people
-init_I = 5 # The number of Infectious agents at beginning of simulation
+hospital_limit = 20
+hospital_factor = 2
 
+N = 100 # The total number of agents
+init_I = 5 # The number of Infectious agents at beginning of simulation
 
 WHITE = (255, 255, 255)
 if ANIMATION_FLAG: # Some set up for animation
@@ -38,7 +41,9 @@ if ANIMATION_FLAG: # Some set up for animation
 	clock = pygame.time.Clock()
 
 # This set ups the simulation using a function defined in agents.py
-population = agents.create_SIRQD_population_with_age_profile(N_old, N_young, init_I, radius, beta, gamma, old_mu, young_mu, kappa, width, height)
+population = agents.create_SIRQD_population_with_hospital_limit(N, init_I, radius, beta, gamma, mu, kappa, width, height, hospital_factor)
+
+
 
 # Arrays to store the number of agents in each category at each time step
 Sarray = np.zeros(T)
@@ -46,7 +51,6 @@ Iarray = np.zeros(T)
 Rarray = np.zeros(T)
 Darray = np.zeros(T)
 Qarray = np.zeros(T)
-old_Darray = np.zeros(T)
 
 # The simulation loop
 for i in range(T):
@@ -63,7 +67,10 @@ for i in range(T):
 		# This stops them from turning from I to D or I to R etc. too quickly.
 		# And it keeps gamma and mu values on more realistic scale.
 		if i % 10 == 0:
-			person.status_update()
+			if Iarray[i-1] < hospital_limit:
+				person.hospital_status_update()
+			else:
+				person.status_update()
 		
 		person.position_update()
 
@@ -78,8 +85,6 @@ for i in range(T):
 			Rarray[i] += 1
 		elif person.status == 'D':
 			Darray[i] += 1
-			if person.mu == old_mu:
-				old_Darray[i] += 1
 		else:
 			Qarray[i] += 1
 	
@@ -101,13 +106,10 @@ plt.plot(Rarray, label='Recovered', color=(1,0,0))
 plt.plot(Darray, label='Dead', color=(0.3,0.3,0.3))
 plt.plot(Qarray, label='Quarantined', color=(0.5,0,0.5))
 
-old_deaths_percent = round(100*old_Darray[-1]/Darray[-1],2)
-plt.plot([], label=f'Old % deaths: {old_deaths_percent}', color=(1,1,1))
-plt.plot([], label=f'Old % of population: {round((100*N_old)/(N_old+N_young),2)}', color=(1,1,1))
-
 plt.xlabel("Time")
 plt.ylabel("Number of people")
-plt.title("Agent Based SIRQD Model with Age Profiles")
+plt.title("Agent Based SIRQD Model")
 plt.legend(loc=0)
 
-plt.savefig("./Plots/AgentAgeProfileSIRQDModel.png")
+plt.savefig("./Plots/AgentSIRQDModel.png")
+

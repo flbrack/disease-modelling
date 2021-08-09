@@ -1,6 +1,8 @@
 '''
 This runs one instance of the basic simulation, which is composed solely of agents of the base Person class defined in agents.py.
-This is analagous to the status equation based model.
+This is analagous to the SIR equation based model.
+Agents have three possible statuses; Susceptible, Infectious or Recovered.
+Susceptible agents are coloured blue, Infectious coloured green and Recovered coloured red.
 It can be run with or without animation by setting the ANIMATION_FLAG to true or false.
 The data from the simulation is not stored but is immediately plotted and the plot saved to the Plots folder.
 '''
@@ -14,9 +16,9 @@ import agents
 ANIMATION_FLAG = True  # Change this depending on if you want an animation or not.
 
 width, height = 800, 600 # This determines the size of the environment for the agents
-radius = 10.0 # This determines the size of the agents
+radius = 15.0 # This determines the size of the agents
 
-T = 5000 # The length of time the simulation will run for. 5000 works well for status model.
+T = 2000 # The length of time the simulation will run for. 2000 works well.
 
 gamma = 0.015 # The rate of recovery
 beta = 0.05 # The infection rate

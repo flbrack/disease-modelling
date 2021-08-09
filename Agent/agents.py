@@ -87,38 +87,6 @@ class Person:
 			self.color = RED
 
 
-class HomePerson(Person):
-
-	'''
-	This is an extension of the base Person class such that each HomePerson has an area within the environment, which it stays within.
-	This is to simulate more closely real world, heterogeneous population mixing.
-	'''
-	
-	def __init__(self, home, home_size, position, velocity, radius, gamma, beta, width, height, status):
-		
-		self.home = home
-		self.home_size = home_size
-		Person.__init__(self, position, velocity, radius, gamma, beta, width, height, status)
-
-	def position_update(self):
-
-		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
-			self.velocity[0] = -self.velocity[0]
-			
-		if self.position[1] + self.radius > self.height or self.position[1] - self.radius < 0:
-			self.velocity[1] = -self.velocity[1]
-
-
-		if np.linalg.norm(self.position - self.home) > (self.home_size - self.radius):
-			normal = self.position - self.home
-			u = ( np.dot(self.velocity, normal)/np.dot(normal, normal) ) * normal
-			w = self.velocity - u
-			self.velocity = w - u
-
-
-		self.position += self.velocity
-		
-
 
 class DeathPerson(Person):
 
@@ -204,19 +172,65 @@ class QuarantineDeathPerson(DeathPerson):
 
 
 
+class Hospital_Limit_Person(QuarantineDeathPerson):
 
-class Hospitalisations(QuarantineDeathPerson):
+	def __init__(self, position, velocity, radius, gamma, beta, mu, kappa, width, height, status, hospital_factor):
+		self.hospital_factor = hospital_factor
+		QuarantineDeathPerson.__init__(self, position, velocity, radius, gamma, beta, mu, kappa, width, height, status)
 
-	def __init__(self, max_hospital):
-
-		self.max_hospital = max_hospital
-
-	def status_update(self):
-		pass
 
 	def hospital_status_update(self):
-		pass
+		if self.status == 'I' and random() < self.gamma:
+			self.status = 'R'
+			self.color = RED
 
+		if self.status == 'I' and random() < self.hospital_factor*self.mu:
+			self.status = 'D'
+			self.color = GREY
+			self.velocity = np.array([0, 0])
+
+		if self.status == 'Q' and random() < self.gamma:
+			self.status = 'R'
+			self.color = RED
+			self.velocity = np.array([(random() - 0.5)*2,(random() - 0.5)*2]) 
+
+		if self.status == 'Q' and random() < self.hospital_factor*self.mu:
+			self.status = 'D'
+			self.color = GREY
+			self.velocity = np.array([0,0])
+
+
+class HomePerson(Person):
+
+	'''
+	This is an extension of the base Person class such that each HomePerson has an area within the environment, which it stays within.
+	This is to simulate more closely real world, heterogeneous population mixing.
+	'''
+	
+	def __init__(self, home, home_size, position, velocity, radius, gamma, beta, width, height, status):
+		
+		self.home = home
+		self.home_size = home_size
+		Person.__init__(self, position, velocity, radius, gamma, beta, width, height, status)
+
+	def position_update(self):
+
+		if self.position[0] + self.radius > self.width or self.position[0] - self.radius < 0:
+			self.velocity[0] = -self.velocity[0]
+			
+		if self.position[1] + self.radius > self.height or self.position[1] - self.radius < 0:
+			self.velocity[1] = -self.velocity[1]
+
+
+		if np.linalg.norm(self.position - self.home) > (self.home_size - self.radius):
+			normal = self.position - self.home
+			u = ( np.dot(self.velocity, normal)/np.dot(normal, normal) ) * normal
+			w = self.velocity - u
+			self.velocity = w - u
+
+
+		self.position += self.velocity
+		
 
 
 # ----------------- Functions for initialising simulations --------------------------------------------------------
@@ -241,8 +255,8 @@ def create_SIR_population(N, init_I, radius, beta, gamma, width, height):
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
-		xspeed = (random() - 0.5)*2
-		yspeed = (random() - 0.5)*2
+		xspeed = (random() - 0.5)*3
+		yspeed = (random() - 0.5)*3
 
 		population.append( Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
 									gamma=gamma, beta=beta, width=width, height=height) )
@@ -261,8 +275,8 @@ def create_SIRD_population(N, init_I, radius, beta, gamma, mu, width, height):
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
-		xspeed = (random() - 0.5)*2
-		yspeed = (random() - 0.5)*2
+		xspeed = (random() - 0.5)*3
+		yspeed = (random() - 0.5)*3
 
 		population.append( DeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
 										gamma=gamma, beta=beta, mu=mu, width=width, height=height) )
@@ -281,8 +295,8 @@ def create_SIRQD_population(N, init_I, radius, beta, gamma, mu, kappa, width, he
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
-		xspeed = (random() - 0.5)*2
-		yspeed = (random() - 0.5)*2
+		xspeed = (random() - 0.5)*3
+		yspeed = (random() - 0.5)*3
 
 		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
 												gamma=gamma, beta=beta, mu=mu, kappa=kappa, width=width, height=height) )
@@ -301,8 +315,8 @@ def create_SIRQD_population_with_age_profile(N_old, N_young, init_I, radius, bet
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
-		xspeed = (random() - 0.5)*2
-		yspeed = (random() - 0.5)*2
+		xspeed = (random() - 0.5)*3
+		yspeed = (random() - 0.5)*3
 
 		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
 												gamma=gamma, beta=beta, mu=old_mu, kappa=kappa, width=width, height=height) )
@@ -311,11 +325,31 @@ def create_SIRQD_population_with_age_profile(N_old, N_young, init_I, radius, bet
 		x = radius + random()*(width - 2*radius)
 		y = radius + random()*(height - 2*radius)
 
-		xspeed = (random() - 0.5)*2
-		yspeed = (random() - 0.5)*2
+		xspeed = (random() - 0.5)*3
+		yspeed = (random() - 0.5)*3
 
 		population.append( QuarantineDeathPerson(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
 												gamma=gamma, beta=beta, mu=young_mu, kappa=kappa, width=width, height=height) )
+
+	initial_infection(init_I, population)
+
+	return population
+
+
+def create_SIRQD_population_with_hospital_limit(N, init_I, radius, beta, gamma, mu, kappa, width, height, hospital_factor):
+
+	# Creates an array of agents.
+	population = []
+
+	for i in range(N):
+		x = radius + random()*(width - 2*radius)
+		y = radius + random()*(height - 2*radius)
+
+		xspeed = (random() - 0.5)*3
+		yspeed = (random() - 0.5)*3
+
+		population.append( Hospital_Limit_Person(position=np.array([x,y]), velocity=np.array([xspeed, yspeed]), status='S', radius=radius, \
+												gamma=gamma, beta=beta, mu=mu, kappa=kappa, width=width, height=height, hospital_factor=hospital_factor) )
 
 	initial_infection(init_I, population)
 

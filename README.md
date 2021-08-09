@@ -86,7 +86,7 @@ After the simulation and animation have finished, a plot is created and saved to
 
 ### Repeated Scripts
 
-Also located in this folder are the files beginning with `Repeated`. These run each of the agents based models multiple times. The data produced from these scripts is saved as a `csv` file to the `Data` folder. As these scripts run simulations with a large number of agents, and repeat them multiple times, they can take a long time to run, usually between 30 to 60 minutes. As a result there is no animation option for these scripts.
+Also located in this folder are the files beginning with `Repeated`. These run each of the agents based models multiple times. The data produced from these scripts is saved as a `csv` file to the `Data` folder. As these scripts run simulations with a large number of agents, and repeat them multiple times, they can take a long time to run, usually between 30 to 60 minutes for ten repeats. As a result there is no animation option for these scripts.
 
 These also have a number of tunable parameters located near the top of the scripts. However, as these take so long to run, and are just repeated simulations of the same type as the animation scripts, I would recommend just running the animation scripts.
 
@@ -113,5 +113,5 @@ There are a number of functions used to set up simulations located in this file.
 
 There are many tunable options for the animations and it can be quite interesting to watch them unfold. I have set some reasonable default parameters, but it is worth playing around to see the different outcomes.
 The equation based models also have tunable parameters, and it is interesting to compare the resulting plots to the plots produced by the agent based models.
-I have optimised the simulations as best I could, but Python is not the quickest language, and while the animations run well usually, for some of the more complicated models, the frame rates can noticeably drop after 100 agents.
+I have optimised the simulations as best I could, but Python is not the quickest language, and while the animations run well usually, for some of the more complicated models, the frame rates can noticeably drop when the number of agents exceeds 200.
 On my personal website I have an [interactive version](https://flbrack.com/posts/2021-07-01-agent/#interactive-animation) of the simple SIR model, which is also fun to play around with.
