@@ -60,11 +60,11 @@ This contains the code for the equation based models. All python scripts, (those
 python3 SIRmodel.py
 ```
 
-Each python script follows the same layout. At the top are the necessary libraries are imported. The `scipy` [library](https://www.scipy.org/scipylib/index.html) is used to numerically integrate the models differential equations and thus provide a plot of the solution.
+Each python script follows the same layout. At the top are the necessary libraries are imported. The [`scipy`](https://www.scipy.org/scipylib/index.html) library is used to numerically integrate the models differential equations and thus provide a plot of the solution.
 
 There are a number of tunable parameters located near the top in each script that can be played around with, such as the population size, the initial number of infectious people and the recovery rate of the disease.
 
-The equations are implemented and integrated and the results are plotted using the `matplotlib` [library](https://matplotlib.org/). Each plot is saved to the `Equation/Plots` folder.
+The equations are implemented and integrated and the results are plotted using the [`matplotlib`](https://matplotlib.org/) library. Each plot is saved to the `Equation/Plots` folder.
 
 ## Agent Folder
 
@@ -78,7 +78,7 @@ All files that begin with `Agent` can be ran and these are the files that will b
 python3 AgentSIRModel.py
 ```
 
-Most importantly, these are the scripts that produce animations. Animations can be turned on and off by editing the script and changing the `ANIMATION_FLAG` constant to either `True` or `False`. For the simulations themselves the [`numpy`](https://numpy.org/) library, as well as Python's standard `random` library are used. The animations are implemented using the `pygame` [library](https://www.pygame.org/news). This is based on the [SDL library](https://www.libsdl.org/), which renders graphics using the CPU, instead of the GPU. As such, it is not always the most performant, amd to keep the animations smooth, a reasonable number of agents should be choosen.
+Most importantly, these are the scripts that produce animations. Animations can be turned on and off by editing the script and changing the `ANIMATION_FLAG` constant to either `True` or `False`. For the simulations themselves the [`numpy`](https://numpy.org/) library, as well as Python's standard `random` library are used. The animations are implemented using the [`pygame`](https://www.pygame.org/news) library. This is based on the [SDL library](https://www.libsdl.org/), which renders graphics using the CPU, instead of the GPU. As such, it is not always the most performant, amd to keep the animations smooth, a reasonable number of agents should be choosen.
 
 In each of these scripts there are a number of tunable parameters, located near the top in each script, such as population size, infection rate, etc.
 
@@ -90,7 +90,7 @@ Also located in this folder are the files beginning with `Repeated`. These run e
 
 These also have a number of tunable parameters located near the top of the scripts. However, as these take so long to run, and are just repeated simulations of the same type as the animation scripts, I would recommend just running the animation scripts.
 
-The `csv` data that is produced from these scripts is plotted using the `DataPlotting.py` script, again using `matplotlib`, as well as the `pandas` [library](https://pandas.pydata.org/).
+The `csv` data that is produced from these scripts is plotted using the `DataPlotting.py` script, again using `matplotlib`, as well as the [`pandas`](https://pandas.pydata.org/) library.
 
 ### The `agents.py` File
 
