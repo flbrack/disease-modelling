@@ -1,11 +1,11 @@
 # Agent Based Disease Modelling
 
-## Overview
+# Overview
 
 The aim of this project is to build, assess and visualise agent based models (ABMs), specifically in the area of disease modelling. Thus, the bulk of this project's codebase is focused on the implementation of simulations, as well as the ability to animate these simulations, covering a wide range of variables and sources of interest, such as superspreaders, social distancing and hospital bed limits.
 In order to see the advantages and disadvantages of ABMs, it is useful to first spend some time on the more common, traditional method of mathematical modelling, equation based models (EBMs), and so there is also some code relating to these.
 
-## Getting Started
+# Getting Started
 
 This project is coded in Python 3.7, and so this installation guide assumes you are running the same. This easiest way to get started and download the source code is by cloning the git repository.
 
@@ -45,14 +45,14 @@ python3 -m pip install -r requirements.txt
 
 All requirements should now be installed and the project code is ready to be ran.
 
-## Project Structure 
+# Project Structure 
 
 There are two main folders in the project, `Equation` contains code for running equation based models, and `Agent`, which contains the bulk of the project, contains code for running agent based model simulations and their animations.
 Inside in each folder there is a subfolder named `Plots`, these are where the plots from the simulations are saved to. The `Agent` folder also contains a folder named `Data`. As some of the agent based simulations were ran multiple times, the data produced from these multiple runs were saved to this folder.
 
-## Which Scripts to Run
+# Which Scripts to Run
 
-### Equation Folder
+## Equation Folder
 
 This contains the code for the equation based models. All python scripts, (those ending with `.py`), can be ran. There are three files, each corresponding to a different equation based model. The name of the script clearly indicates which script implements which model. In order to run any of the scripts, `cd` into the `Equation` folder and then run `python3` followed by the script name. As an example, in order to run the SIR model, which is implemented in the SIRmodel.py script, run;
 
@@ -66,11 +66,11 @@ There are a number of tunable parameters located near the top in each script tha
 
 The equations are implemented and integrated and the results are plotted using the `matplotlib` [library](https://matplotlib.org/). Each plot is saved to the `Equation/Plots` folder.
 
-### Agent Folder
+## Agent Folder
 
 This contains the agent based models. There are a number of files here but not all should be ran directly.
 
-#### Animation Scripts
+### Animation Scripts
 
 All files that begin with `Agent` can be ran and these are the files that will be of most interest and are most worth playing around with. Their names should be somewhat self-explanatory, but a short explanation is also written at the top of each script. Each of these scripts can be ran using `python3`. eg., in order to run the agent based equivalent of the SIR model, which is implemented by the `AgentSIRModel.py` script, run;
 
@@ -82,7 +82,7 @@ Most importantly, these are the scripts that produce animations. Animations can 
 
 In each of these scripts there are a number of tunable parameters, located near the top in each script, such as population size, infection rate, etc.
 
-#### Repeated Scripts
+### Repeated Scripts
 
 Also located in this folder are the files beginning with `Repeated`. These run each of the agents based models multiple times. The data produced from these scripts is saved as a `csv` file to the `Data` folder. As these scripts run simulations with a large number of agents, and repeat them multiple times, they can take a long time to run, usually between 30 to 60 minutes. As a result there is no animation option for these scripts.
 
@@ -90,7 +90,7 @@ These also have a number of tunable parameters located near the top of the scrip
 
 The data that is produced from these scripts is plotted using the `DataPlotting.py` script.
 
-#### The `agents.py` File
+### The `agents.py` File
 
 This is arguably the most important file in the project, and works as the back-end for all the agent based simulations. It contains the class definitions and methods for all the agents.
 It also contains a number of functions that are used for the animations, as well as functions that are used for setting up the simulations.
