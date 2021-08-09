@@ -78,9 +78,11 @@ All files that begin with `Agent` can be ran and these are the files that will b
 python3 AgentSIRModel.py
 ```
 
-Most importantly, these are the scripts that produce animations. Animations can be turned on and off by editing the script and changing the `ANIMATION_FLAG` constant to either `True` or `False`. For the simulations themselves the `numpy` [library](https://numpy.org/), as well as Python's standard `random` library are used. The animations are implemented using the `pygame` [library](https://www.pygame.org/news). This is based on the [SDL library](https://www.libsdl.org/), which renders graphics using the CPU, instead of the GPU. As such, it is not always the most performant, amd to keep the animations smooth, a reasonable number of agents should be choosen.u
+Most importantly, these are the scripts that produce animations. Animations can be turned on and off by editing the script and changing the `ANIMATION_FLAG` constant to either `True` or `False`. For the simulations themselves the `numpy` [library](https://numpy.org/), as well as Python's standard `random` library are used. The animations are implemented using the `pygame` [library](https://www.pygame.org/news). This is based on the [SDL library](https://www.libsdl.org/), which renders graphics using the CPU, instead of the GPU. As such, it is not always the most performant, amd to keep the animations smooth, a reasonable number of agents should be choosen.
 
 In each of these scripts there are a number of tunable parameters, located near the top in each script, such as population size, infection rate, etc.
+
+After the simulation and animation have finished, a plot is created and saved to the `Agent/Plots` folder graphically illustrating how the simulation unfolded.
 
 ### Repeated Scripts
 
@@ -106,3 +108,10 @@ For example, the base class of agent is the `Person` class. This contains a numb
 There are a number of other classes that extend this base class, with altered and new methods, and these are described in the file itself.
 
 There are a number of functions used to set up simulations located in this file. For example, the `create_SIR_population` function is used by the `AgentSIRModel.py` script to create an array of agents of the base class `Person`.
+
+# Conclusion
+
+There are many tunable options for the animations and it can be quite interesting to watch them unfold. I have set some reasonable default parameters, but it is worth playing around to see the different outcomes.
+The equation based models also have tunable parameters, and it is interesting to compare the resulting plots to the plots produced by the agent based models.
+I have optimised the simulations as best I could, but Python is not the quickest language, and while the animations run well usually, for some of the more complicated models, the frame rates can noticeably drop after 100 agents.
+On my personal website I have an [interactive version](https://flbrack.com/posts/2021-07-01-agent/#interactive-animation) of the simple SIR model, which is also fun to play around with.
